@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
 using MVC18.DTOs.Products.Create;
+using MVC18.DTOs.Products.Update;
 using MVC18.DTOs.Results.Products;
 using MVC18.Models;
 using MVC18.Services.Interfaces.Products;
@@ -111,6 +112,72 @@ namespace MVC18.Services.Implementations.Products
                 Message = "Lấy chi tiết Storage thành công.",
                 Storage = _mapper.Map<StorageDTO>(storage)
             };
+        }
+        public async Task<StorageResult> UpdateAsync(Guid id, UpdateStorageDTO dto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.Image)
+                    .Include(p => p.ProductSku)
+                        .ThenInclude(s => s!.Storage)
+                    .FirstOrDefaultAsync(p => p.ProductUuid == id && !p.IsDeleted);
+
+                if (product == null)
+                    return new StorageResult { Success = false, Message = "Storage không tồn tại." };
+
+                var sku = product.ProductSku;
+                if (sku == null)
+                    return new StorageResult { Success = false, Message = "Không tìm thấy SKU của Storage." };
+
+                var storage = sku.Storage;
+                if (storage == null)
+                    return new StorageResult { Success = false, Message = "Không tìm thấy dữ liệu Storage." };
+
+                // Cập nhật Image
+                product.Image.ImageUrl = dto.ImageUrl;
+
+                // Cập nhật Product (gán tay)
+                product.ProductName = dto.ProductName;
+                product.Description = dto.Description;
+                product.CategoryId  = dto.CategoryId;
+                product.SupplierId  = dto.CompanyId;
+                product.UpdatedAt   = DateTime.Now;
+
+                // Cập nhật ProductSku (gán tay)
+                sku.UnitPrice    = dto.UnitPrice;
+                sku.UnitsInStock = dto.UnitsInStock;
+
+                // Cập nhật Storage (gán tay)
+                storage.Capacity      = dto.Capacity;
+                storage.MemoryType    = dto.MemoryType;
+                storage.InterfaceType = dto.InterfaceType;
+                storage.ReadSpeed     = dto.ReadSpeed;
+                storage.WriteSpeed    = dto.WriteSpeed;
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                var updated = await _context.VwdStorageDetails
+                    .FirstOrDefaultAsync(s => s.ProductUuid == id);
+
+                return new StorageResult
+                {
+                    Success = true,
+                    Message = "Cập nhật Storage thành công.",
+                    Storage = _mapper.Map<StorageDTO>(updated)
+                };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return new StorageResult
+                {
+                    Success = false,
+                    Message = $"Cập nhật Storage thất bại: {ex.Message}"
+                };
+            }
         }
     }
 }

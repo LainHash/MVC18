@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
 using MVC18.DTOs.Products.Create;
+using MVC18.DTOs.Products.Update;
 using MVC18.DTOs.Results.Products;
 using MVC18.Models;
 using MVC18.Services.Interfaces.Products;
@@ -111,6 +112,73 @@ namespace MVC18.Services.Implementations.Products
                 Message = "Lấy chi tiết CPU thành công.",
                 Cpu = _mapper.Map<CpuDTO>(cpu)
             };
+        }
+        public async Task<CpuResult> UpdateAsync(Guid id, UpdateCpuDTO dto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.Image)
+                    .Include(p => p.ProductSku)
+                        .ThenInclude(s => s!.Cpu)
+                    .FirstOrDefaultAsync(p => p.ProductUuid == id && !p.IsDeleted);
+
+                if (product == null)
+                    return new CpuResult { Success = false, Message = "CPU không tồn tại." };
+
+                var sku = product.ProductSku;
+                if (sku == null)
+                    return new CpuResult { Success = false, Message = "Không tìm thấy SKU của CPU." };
+
+                var cpu = sku.Cpu;
+                if (cpu == null)
+                    return new CpuResult { Success = false, Message = "Không tìm thấy dữ liệu CPU." };
+
+                // Cập nhật Image
+                product.Image.ImageUrl = dto.ImageUrl;
+
+                // Cập nhật Product (gán tay)
+                product.ProductName = dto.ProductName;
+                product.Description = dto.Description;
+                product.CategoryId  = dto.CategoryId;
+                product.SupplierId  = dto.CompanyId;
+                product.UpdatedAt   = DateTime.Now;
+
+                // Cập nhật ProductSku (gán tay)
+                sku.UnitPrice    = dto.UnitPrice;
+                sku.UnitsInStock = dto.UnitsInStock;
+
+                // Cập nhật Cpu (gán tay)
+                cpu.Cores    = dto.Cores;
+                cpu.Logicals = dto.Logicals;
+                cpu.Tdp      = dto.Tdp;
+                cpu.Socket   = dto.Socket;
+                cpu.Speed    = dto.Speed;
+                cpu.Turbo    = dto.Turbo;
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                var updated = await _context.VwdCpuDetails
+                    .FirstOrDefaultAsync(c => c.ProductUuid == id);
+
+                return new CpuResult
+                {
+                    Success = true,
+                    Message = "Cập nhật CPU thành công.",
+                    Cpu     = _mapper.Map<CpuDTO>(updated)
+                };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return new CpuResult
+                {
+                    Success = false,
+                    Message = $"Cập nhật CPU thất bại: {ex.Message}"
+                };
+            }
         }
     }
 }

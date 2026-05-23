@@ -24,7 +24,7 @@ namespace MVC18.Controllers
             var result = await _productService.GetOneAsync(id);
             if (!result.Success)
             {
-                return NotFound();
+                return NotFound(result.Message);
             }
 
             switch (result.Product!.CategoryName)
@@ -44,50 +44,19 @@ namespace MVC18.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Delete(Guid id)
         {
-            return View();
-        }
-
-        public async Task<IActionResult> Edit()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> Delete()
-        {
-            return View();
-        }
-
-        public async Task<IActionResult> GetAll()
-        {
-            var result = await _productService.GetAllAsync();
-
-            return Ok(new
-            {
-                success = true,
-                message = result.Message,
-                products = result.Products
-            });
-        }
-
-        public async Task<IActionResult> GetOne(Guid id)
-        {
-            var result = await _productService.GetOneAsync(id);
+            var result = await _productService.DeleteAsync(id);
             if (!result.Success)
             {
-                return NotFound(new
-                {
-                    success = false,
-                    message = result.Message
-                });
+                return NotFound(result.Message);
             }
             return Ok(new
             {
-                success = true,
-                message = result.Message,
-                product = result.Product
+                success = result.Success,
+                message = result.Message
             });
         }
+
     }
 }

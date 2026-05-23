@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
 using MVC18.DTOs.Products.Create;
+using MVC18.DTOs.Products.Update;
 using MVC18.DTOs.Results.Products;
 using MVC18.Models;
 using MVC18.Services.Interfaces.Products;
@@ -110,6 +111,71 @@ namespace MVC18.Services.Implementations.Products
                 Message = "Lấy chi tiết Ram thành công.",
                 Ram = _mapper.Map<RamDTO>(ram)
             };
+        }
+        public async Task<RamResult> UpdateAsync(Guid id, UpdateRamDTO dto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var product = await _context.Products
+                    .Include(p => p.Image)
+                    .Include(p => p.ProductSku)
+                        .ThenInclude(s => s!.Ram)
+                    .FirstOrDefaultAsync(p => p.ProductUuid == id && !p.IsDeleted);
+
+                if (product == null)
+                    return new RamResult { Success = false, Message = "RAM không tồn tại." };
+
+                var sku = product.ProductSku;
+                if (sku == null)
+                    return new RamResult { Success = false, Message = "Không tìm thấy SKU của RAM." };
+
+                var ram = sku.Ram;
+                if (ram == null)
+                    return new RamResult { Success = false, Message = "Không tìm thấy dữ liệu RAM." };
+
+                // Cập nhật Image
+                product.Image.ImageUrl = dto.ImageUrl;
+
+                // Cập nhật Product (gán tay)
+                product.ProductName = dto.ProductName;
+                product.Description = dto.Description;
+                product.CategoryId  = dto.CategoryId;
+                product.SupplierId  = dto.CompanyId;
+                product.UpdatedAt   = DateTime.Now;
+
+                // Cập nhật ProductSku (gán tay)
+                sku.UnitPrice    = dto.UnitPrice;
+                sku.UnitsInStock = dto.UnitsInStock;
+
+                // Cập nhật Ram (gán tay)
+                ram.Capacity = dto.Capacity;
+                ram.Gen      = dto.Gen;
+                ram.Speed    = dto.Speed;
+                ram.Kit      = dto.Kit;
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                var updated = await _context.VwdRamDetails
+                    .FirstOrDefaultAsync(r => r.ProductUuid == id);
+
+                return new RamResult
+                {
+                    Success = true,
+                    Message = "Cập nhật RAM thành công.",
+                    Ram     = _mapper.Map<RamDTO>(updated)
+                };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return new RamResult
+                {
+                    Success = false,
+                    Message = $"Cập nhật RAM thất bại: {ex.Message}"
+                };
+            }
         }
     }
 }

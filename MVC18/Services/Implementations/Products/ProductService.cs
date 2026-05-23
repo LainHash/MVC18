@@ -52,19 +52,36 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
-        public async Task<ProductResult> CreateAsync()
+        public async Task<ProductResult> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
-        }
+            var product = await _context.Products
+                .FirstOrDefaultAsync(p => p.ProductUuid == id);
+            if (product == null)
+            {
+                return new ProductResult
+                {
+                    Success = false,
+                    Message = "Sản phẩm không tồn tại."
+                };
+            }
+            if (product.IsDeleted)
+            {
+                return new ProductResult
+                {
+                    Success = false,
+                    Message = "Sản phẩm đã bị xóa."
+                };
+            }
 
-        public Task<ProductResult> UpdateAsync()
-        {
-            throw new NotImplementedException();
-        }
+            product.IsDeleted = true;
+            _context.Products.Update(product);
+            await _context.SaveChangesAsync();
+            return new ProductResult
+            {
+                Success = true,
+                Message = "Xóa sản phẩm thành công."
 
-        public Task<ProductResult> DeleteAsync(Guid id)
-        {
-            throw new NotImplementedException();
+            };
         }
 
     }

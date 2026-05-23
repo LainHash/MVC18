@@ -6,8 +6,6 @@ namespace MVC18.Services.Interfaces.Products
     {
         Task<ProductResult> GetAllAsync();
         Task<ProductResult> GetOneAsync(Guid id);
-        Task<ProductResult> CreateAsync();
-        Task<ProductResult> UpdateAsync();
         Task<ProductResult> DeleteAsync(Guid id);
     }
 }

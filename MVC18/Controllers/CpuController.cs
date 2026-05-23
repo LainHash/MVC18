@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MVC18.DTOs.Products.Create;
+using MVC18.DTOs.Products.Update;
 using MVC18.Services.Interfaces.Products;
 
 namespace MVC18.Controllers
@@ -47,6 +48,47 @@ namespace MVC18.Controllers
 
             TempData["SuccessMessage"] = result.Message;
             return RedirectToAction(nameof(Details), new { id = result.Cpu!.ProductUuid });
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var result = await _cpuService.GetOneAsync(id);
+            if (!result.Success)
+                return NotFound();
+
+            var dto = new UpdateCpuDTO
+            {
+                ProductName  = result.Cpu!.ProductName,
+                ImageUrl     = result.Cpu.ImageUrl ?? string.Empty,
+                Description  = result.Cpu.Description,
+                UnitPrice    = result.Cpu.UnitPrice,
+                UnitsInStock = result.Cpu.UnitsInStock,
+                Cores        = result.Cpu.Cores,
+                Logicals     = result.Cpu.Logicals,
+                Tdp          = result.Cpu.Tdp,
+                Socket       = result.Cpu.Socket,
+                Speed        = result.Cpu.Speed,
+                Turbo        = result.Cpu.Turbo
+            };
+            return View(dto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, UpdateCpuDTO dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            var result = await _cpuService.UpdateAsync(id, dto);
+            if (!result.Success)
+            {
+                ModelState.AddModelError(string.Empty, result.Message ?? "Cập nhật CPU thất bại.");
+                return View(dto);
+            }
+
+            TempData["SuccessMessage"] = result.Message;
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }

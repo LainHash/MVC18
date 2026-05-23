@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
 using MVC18.DTOs.Products.Create;
+using MVC18.DTOs.Products.Update;
 using MVC18.DTOs.Results.Products;
 using MVC18.Models;
 using MVC18.Services.Interfaces.Products;
@@ -136,6 +137,98 @@ namespace MVC18.Services.Implementations.Products
                 Message = "Lấy chi tiết Laptop thành công.",
                 Laptop = _mapper.Map<LaptopDTO>(laptop)
             };
+        }
+        public async Task<LaptopResult> UpdateAsync(Guid id, UpdateLaptopDTO dto)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                // Kiểm tra các component tồn tại
+                var cpuExists     = await _context.Cpus.AnyAsync(c => c.CpuId == dto.CpuId);
+                var gpuExists     = await _context.Gpus.AnyAsync(g => g.GpuId == dto.GpuId);
+                var ramExists     = await _context.Rams.AnyAsync(r => r.RamId == dto.RamId);
+                var storageExists = await _context.Storages.AnyAsync(s => s.StorageId == dto.StorageId);
+
+                if (!cpuExists)
+                    return new LaptopResult { Success = false, Message = $"CPU với Id={dto.CpuId} không tồn tại." };
+                if (!gpuExists)
+                    return new LaptopResult { Success = false, Message = $"GPU với Id={dto.GpuId} không tồn tại." };
+                if (!ramExists)
+                    return new LaptopResult { Success = false, Message = $"RAM với Id={dto.RamId} không tồn tại." };
+                if (!storageExists)
+                    return new LaptopResult { Success = false, Message = $"Storage với Id={dto.StorageId} không tồn tại." };
+
+                var product = await _context.Products
+                    .Include(p => p.Image)
+                    .Include(p => p.ProductSku)
+                        .ThenInclude(s => s!.Laptop)
+                            .ThenInclude(l => l!.LaptopComponent)
+                    .FirstOrDefaultAsync(p => p.ProductUuid == id && !p.IsDeleted);
+
+                if (product == null)
+                    return new LaptopResult { Success = false, Message = "Laptop không tồn tại." };
+
+                var sku = product.ProductSku;
+                if (sku == null)
+                    return new LaptopResult { Success = false, Message = "Không tìm thấy SKU của Laptop." };
+
+                var laptop = sku.Laptop;
+                if (laptop == null)
+                    return new LaptopResult { Success = false, Message = "Không tìm thấy dữ liệu Laptop." };
+
+                var laptopComponent = laptop.LaptopComponent;
+                if (laptopComponent == null)
+                    return new LaptopResult { Success = false, Message = "Không tìm thấy LaptopComponent." };
+
+                // Cập nhật Image
+                product.Image.ImageUrl = dto.ImageUrl;
+
+                // Cập nhật Product (gán tay)
+                product.ProductName = dto.ProductName;
+                product.Description = dto.Description;
+                product.CategoryId  = dto.CategoryId;
+                product.SupplierId  = dto.CompanyId;
+                product.UpdatedAt   = DateTime.Now;
+
+                // Cập nhật ProductSku (gán tay)
+                sku.UnitPrice    = dto.UnitPrice;
+                sku.UnitsInStock = dto.UnitsInStock;
+
+                // Cập nhật LaptopComponent (gán tay)
+                laptopComponent.CpuId     = dto.CpuId;
+                laptopComponent.GpuId     = dto.GpuId;
+                laptopComponent.RamId     = dto.RamId;
+                laptopComponent.StorageId = dto.StorageId;
+
+                // Cập nhật Laptop (gán tay)
+                laptop.LaptopType       = dto.LaptopType;
+                laptop.Os               = dto.Os;
+                laptop.ScreenResolution = dto.ScreenResolution;
+                laptop.Length           = dto.Length;
+                laptop.Weight           = dto.Weight;
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                var updated = await _context.VwdLaptopDetails
+                    .FirstOrDefaultAsync(l => l.ProductUuid == id);
+
+                return new LaptopResult
+                {
+                    Success = true,
+                    Message = "Cập nhật Laptop thành công.",
+                    Laptop  = _mapper.Map<LaptopDTO>(updated)
+                };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return new LaptopResult
+                {
+                    Success = false,
+                    Message = $"Cập nhật Laptop thất bại: {ex.Message}"
+                };
+            }
         }
     }
 }

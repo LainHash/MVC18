@@ -1,4 +1,5 @@
-﻿using MVC18.DTOs.Products.Create;
+using MVC18.DTOs.Products.Create;
+using MVC18.DTOs.Products.Update;
 using MVC18.DTOs.Results.Products;
 
 namespace MVC18.Services.Interfaces.Products
@@ -7,5 +8,6 @@ namespace MVC18.Services.Interfaces.Products
     {
         Task<RamResult> GetOneAsync(Guid id);
         Task<RamResult> CreateAsync(CreateRamDTO dto);
+        Task<RamResult> UpdateAsync(Guid id, UpdateRamDTO dto);
     }
 }
