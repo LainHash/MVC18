@@ -3,8 +3,12 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MVC18.Data;
+using MVC18.Services.Implementations.Auth;
 using MVC18.Services.Implementations.Products;
+using MVC18.Services.Implementations.Users;
+using MVC18.Services.Interfaces.Auth;
 using MVC18.Services.Interfaces.Products;
+using MVC18.Services.Interfaces.Users;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,6 +84,8 @@ builder.Services.AddScoped<ICpuService, CpuService>();
 builder.Services.AddScoped<IGpuService, GpuService>();
 builder.Services.AddScoped<IRamService, RamService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
