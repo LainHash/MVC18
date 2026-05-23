@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
@@ -22,7 +22,75 @@ namespace MVC18.Services.Implementations.Products
 
         public async Task<CpuResult> CreateAsync(CreateCpuDTO dto)
         {
-            
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var image = new Image
+                {
+                    ImageUrl = dto.ImageUrl
+                };
+                _context.Images.Add(image);
+                await _context.SaveChangesAsync();
+
+                var product = new Product
+                {
+                    ProductName  = dto.ProductName,
+                    Description  = dto.Description,
+                    CategoryId   = dto.CategoryId,
+                    SupplierId   = dto.CompanyId,
+                    ImageId      = image.ImageId,
+                    IsDeleted    = false,
+                    CreatedAt    = DateTime.Now,
+                    UpdatedAt    = DateTime.Now
+                };
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+
+                var sku = new ProductSku
+                {
+                    ProductId      = product.ProductId,
+                    UnitPrice      = dto.UnitPrice,
+                    UnitsInStock   = dto.UnitsInStock,
+                    Discontinued   = false,
+                    IsDeleted      = false
+                };
+                _context.ProductSkus.Add(sku);
+                await _context.SaveChangesAsync();
+
+                var cpu = new Cpu
+                {
+                    Cores        = dto.Cores,
+                    Logicals     = dto.Logicals,
+                    Tdp          = dto.Tdp,
+                    Socket       = dto.Socket,
+                    Speed        = dto.Speed,
+                    Turbo        = dto.Turbo,
+                    ProductSkuId = sku.ProductSkuId
+                };
+                _context.Cpus.Add(cpu);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                var created = await _context.VwdCpuDetails
+                    .FirstOrDefaultAsync(c => c.ProductUuid == product.ProductUuid);
+
+                return new CpuResult
+                {
+                    Success = true,
+                    Message = "Tạo CPU thành công.",
+                    Cpu     = _mapper.Map<CpuDTO>(created)
+                };
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return new CpuResult
+                {
+                    Success = false,
+                    Message = $"Tạo CPU thất bại: {ex.Message}"
+                };
+            }
         }
 
         public async Task<CpuResult> GetOneAsync(Guid id)
