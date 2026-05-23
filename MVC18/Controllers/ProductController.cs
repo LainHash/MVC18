@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MVC18.DTOs.Misc;
 using MVC18.Helpers.Constants.Misc;
 using MVC18.Services.Interfaces.Products;
 
@@ -13,10 +14,10 @@ namespace MVC18.Controllers
             _productService = productService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] ProductQuery query)
         {
-            var result = await _productService.GetAllAsync();
-            return View(result.Products);
+            var result = await _productService.GetAllAsync(query);
+            return View(result.Items);
         }
 
         public async Task<IActionResult> Details(Guid id)
@@ -41,7 +42,11 @@ namespace MVC18.Controllers
                     return RedirectToAction("Details", "Storage", new { id });
             }
 
-            return RedirectToAction("Index");
+            return NotFound(new
+            {
+                success = false,
+                message = "Sản phẩm không tồn tại."
+            });
         }
 
         public async Task<IActionResult> Delete(Guid id)
@@ -49,11 +54,15 @@ namespace MVC18.Controllers
             var result = await _productService.DeleteAsync(id);
             if (!result.Success)
             {
-                return NotFound(result.Message);
+                return NotFound(new
+                {
+                    success = false,
+                    message = result.Message
+                });
             }
             return Ok(new
             {
-                success = result.Success,
+                success = true,
                 message = result.Message
             });
         }

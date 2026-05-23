@@ -4,8 +4,8 @@ using MVC18.Data;
 using MVC18.DTOs.Products;
 using MVC18.DTOs.Products.Create;
 using MVC18.DTOs.Products.Update;
-using MVC18.DTOs.Results.Products;
 using MVC18.Models;
+using MVC18.ResultModels.Products;
 using MVC18.Services.Interfaces.Products;
 
 namespace MVC18.Services.Implementations.Products

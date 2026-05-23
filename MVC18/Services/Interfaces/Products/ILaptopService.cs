@@ -1,6 +1,6 @@
 ﻿using MVC18.DTOs.Products.Create;
 using MVC18.DTOs.Products.Update;
-using MVC18.DTOs.Results.Products;
+using MVC18.ResultModels.Products;
 
 namespace MVC18.Services.Interfaces.Products
 {

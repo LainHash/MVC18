@@ -1,4 +1,4 @@
-﻿namespace MVC18.DTOs.Results
+﻿namespace MVC18.ResultModels
 {
     public class BaseResult
     {

@@ -1,6 +1,7 @@
 ﻿using MVC18.DTOs.Products;
+using MVC18.ResultModels;
 
-namespace MVC18.DTOs.Results.Products
+namespace MVC18.ResultModels.Products
 {
     public class GpuResult : BaseResult
     {

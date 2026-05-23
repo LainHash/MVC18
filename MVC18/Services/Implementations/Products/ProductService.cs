@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
+using MVC18.DTOs.Misc;
 using MVC18.DTOs.Products;
-using MVC18.DTOs.Results.Products;
+using MVC18.Helpers.Constants.Misc;
+using MVC18.ResultModels.Misc;
+using MVC18.ResultModels.Products;
 using MVC18.Services.Interfaces.Products;
 
 namespace MVC18.Services.Implementations.Products
@@ -28,6 +31,65 @@ namespace MVC18.Services.Implementations.Products
                 Success = true,
                 Message = "Lấy danh sách sản phẩm thành công.",
                 Products = _mapper.Map<List<ProductDTO>>(list)
+            };
+        }
+
+        public async Task<PagedResult<ProductDTO>> GetAllAsync(ProductQuery query)
+        {
+            var list = _context.VwProducts.AsQueryable();
+
+            if(!string.IsNullOrEmpty(query.Keyword))
+            {
+                list = list.Where(p => p.ProductName.Contains(query.Keyword));
+            }
+
+            if(!string.IsNullOrEmpty(query.CategoryName))
+            {
+                list = list.Where(p => p.CategoryName == query.CategoryName);
+            }
+
+            if(!string.IsNullOrEmpty(query.CompanyName))
+            {
+                list = list.Where(p => p.CompanyName == query.CompanyName);
+            }
+
+            if(!string.IsNullOrEmpty(query.SortBy))
+            {
+                switch (query.SortBy)
+                {
+                    case SortByConstants.CreatedAtAsc:
+                        list = list.OrderBy(p => p.CreatedAt);
+                        break;
+                    case SortByConstants.CreatedAtDesc:
+                        list = list.OrderByDescending(p => p.CreatedAt);
+                        break;
+                    case SortByConstants.NameAsc:
+                        list = list.OrderBy(p => p.ProductName);
+                        break;
+                    case SortByConstants.NameDesc:
+                        list = list.OrderByDescending(p => p.ProductName);
+                        break;
+                    case SortByConstants.PriceAsc:
+                        list = list.OrderBy(p => p.UnitPrice);
+                        break;
+                    case SortByConstants.PriceDesc:
+                        list = list.OrderByDescending(p => p.UnitPrice);
+                        break;
+                }  
+            }
+            var totalItems = await list.CountAsync();
+            var items = await list.Skip((query.Page - 1) * query.PageSize)
+                                  .Take(query.PageSize)
+                                  .ToListAsync();
+
+            return new PagedResult<ProductDTO>
+            {
+                Success = true,
+                Message = "Lấy danh sách sản phẩm thành công.",
+                Items = _mapper.Map<List<ProductDTO>>(items),
+                TotalItems = totalItems,
+                Page = query.Page,
+                PageSize = query.PageSize
             };
         }
 
