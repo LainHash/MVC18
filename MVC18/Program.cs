@@ -74,10 +74,12 @@ var myConnectionString = builder.Configuration.GetConnectionString("MyConnectStr
 builder.Services.AddDbContext<LaptopWebDb06Context>(option => option.UseSqlServer(myConnectionString));
 
 //Service Scope
-//builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IProductService, ProductService>();
-//builder.Services.AddScoped<ICartService, CartService>();
-//builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<ILaptopService, LaptopService>();
+builder.Services.AddScoped<ICpuService, CpuService>();
+builder.Services.AddScoped<IGpuService, GpuService>();
+builder.Services.AddScoped<IRamService, RamService>();
+builder.Services.AddScoped<IStorageService, StorageService>();
 
 var app = builder.Build();
 
