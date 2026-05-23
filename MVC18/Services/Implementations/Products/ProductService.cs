@@ -176,5 +176,6 @@ namespace MVC18.Services.Implementations.Products
                 Storage = _mapper.Map<StorageDTO>(storage)
             };
         }
+
     }
 }

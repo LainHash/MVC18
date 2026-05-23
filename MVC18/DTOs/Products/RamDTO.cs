@@ -1,6 +1,6 @@
 ﻿namespace MVC18.DTOs.Products
 {
-    public class RamDTO
+    public class RamDTO 
     {
         public string CategoryName { get; set; } = null!;
 
