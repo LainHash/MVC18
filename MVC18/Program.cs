@@ -22,6 +22,9 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddMaps(typeof(Program).Assembly);
 });
 
+// Memory Cache (for OTP, email verification, etc)
+builder.Services.AddMemoryCache();
+
 //Session Section
 builder.Services.AddSession(options =>
 {
@@ -57,7 +60,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             OnChallenge = context =>
             {
                 context.HandleResponse();
-                context.Response.Redirect("/Account/Login");
+                context.Response.Redirect("/Auth/Login");
                 return Task.CompletedTask;
             }
         };
@@ -86,6 +89,8 @@ builder.Services.AddScoped<IRamService, RamService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 var app = builder.Build();
 
