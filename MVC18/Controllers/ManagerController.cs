@@ -16,7 +16,7 @@ namespace MVC18.Controllers
         public async Task<IActionResult> Products()
         {
             var result = await _managerService.GetAllProductsAsync();
-            return View(result.Products ?? new List<MVC18.DTOs.Products.ProductDTO>());
+            return View(result.Products);
         }
 
         public async Task<IActionResult> Customers()

@@ -21,6 +21,8 @@ namespace MVC18.Mappings
             CreateMap<VwdLaptopDetail, UpdateLaptopDTO>();
             CreateMap<VwdStorageDetail, UpdateStorageDTO>();
             CreateMap<VwdRamDetail, UpdateRamDTO>();
+
+            CreateMap<VwmProduct, ProductDTO>();
         }
     }
 }

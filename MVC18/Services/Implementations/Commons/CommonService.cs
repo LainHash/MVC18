@@ -65,5 +65,29 @@ namespace MVC18.Services.Implementations.Commons
                 Suppliers = suppliers
             };
         }
+
+        public List<SelectListItem> GetCategoriesForCreate()
+        {
+            var categories = _context.Categories
+                .Select(c => new SelectListItem
+                {
+                    Text = c.CategoryName,
+                    Value = c.CategoryId.ToString()
+                })
+                .ToList();
+            return categories;
+        }
+
+        public List<SelectListItem> GetSuppliersForCreate()
+        {
+            var suppliers = _context.Suppliers
+                .Select(s => new SelectListItem
+                {
+                    Text = s.CompanyName,
+                    Value = s.SupplierId.ToString()
+                })
+                .ToList();
+            return suppliers;
+        }
     }
 }

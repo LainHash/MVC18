@@ -39,7 +39,7 @@ namespace MVC18.Services.Implementations.Products
                     ProductName = dto.ProductName,
                     Description = dto.Description,
                     CategoryId = dto.CategoryId,
-                    SupplierId = dto.CompanyId,
+                    SupplierId = dto.SupplierId,
                     ImageId = image.ImageId,
                     IsDeleted = false,
                     CreatedAt = DateTime.Now,
@@ -206,7 +206,7 @@ namespace MVC18.Services.Implementations.Products
                 product.ProductName = dto.ProductName;
                 product.Description = dto.Description;
                 product.CategoryId = dto.CategoryId;
-                product.SupplierId = dto.CompanyId;
+                product.SupplierId = dto.SupplierId;
                 product.UpdatedAt = DateTime.Now;
 
                 sku.UnitPrice = dto.UnitPrice;

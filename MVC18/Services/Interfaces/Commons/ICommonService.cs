@@ -10,5 +10,8 @@ namespace MVC18.Services.Interfaces.Commons
         SupplierResult GetAllSuppliers(string? categoryName);
 
         List<SelectListItem> GetAllSortByOptions();
+
+        List<SelectListItem> GetCategoriesForCreate();
+        List<SelectListItem> GetSuppliersForCreate();
     }
 }

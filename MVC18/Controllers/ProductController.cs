@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MVC18.DTOs.Misc;
 using MVC18.Helpers.Constants.Misc;
 using MVC18.Services.Interfaces.Commons;
@@ -38,6 +39,7 @@ namespace MVC18.Controllers
         [Authorize(Policy = "Manager")]
         public async Task<IActionResult> Create(string category)
         {
+            GetCreateViewBags();
             switch (category)
             {
                 case CategoryConstants.Laptop:
@@ -110,6 +112,12 @@ namespace MVC18.Controllers
                 success = true,
                 message = result.Message
             });
+        }
+
+        private void GetCreateViewBags()
+        {
+            ViewBag.Categories = new SelectList(_commonService.GetCategoriesForCreate(), "Value", "Text");
+            ViewBag.Suppliers = new SelectList(_commonService.GetSuppliersForCreate(), "Value", "Text");
         }
 
     }

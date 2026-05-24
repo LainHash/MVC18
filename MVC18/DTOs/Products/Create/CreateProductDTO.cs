@@ -8,9 +8,9 @@ namespace MVC18.DTOs.Products.Create
         [Range(1, int.MaxValue, ErrorMessage = "CategoryId phải lớn hơn 0.")]
         public int CategoryId { get; set; }
 
-        [Required(ErrorMessage = "CompanyId là bắt buộc.")]
-        [Range(1, int.MaxValue, ErrorMessage = "CompanyId phải lớn hơn 0.")]
-        public int CompanyId { get; set; }
+        [Required(ErrorMessage = "SupplierId là bắt buộc.")]
+        [Range(1, int.MaxValue, ErrorMessage = "SupplierId phải lớn hơn 0.")]
+        public int SupplierId { get; set; }
 
         [Required(ErrorMessage = "Tên sản phẩm là bắt buộc.")]
         [StringLength(200, MinimumLength = 2, ErrorMessage = "Tên sản phẩm phải từ 2 đến 200 ký tự.")]

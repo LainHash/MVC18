@@ -2,15 +2,17 @@
 {
     public class ProductDTO
     {
+        public int CategoryId { get; set; }
         public string CategoryName { get; set; } = null!;
 
+        public int SupplierId { get; set; }
         public string CompanyName { get; set; } = null!;
 
         public string ProductName { get; set; } = null!;
 
         public Guid ProductUuid { get; set; }
 
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = null!;
 
         public string? Description { get; set; }
 

@@ -104,6 +104,8 @@ public partial class LaptopWebDb06Context : DbContext
 
     public virtual DbSet<VwdStorageDetail> VwdStorageDetails { get; set; }
 
+    public virtual DbSet<VwmProduct> VwmProducts { get; set; }
+
     public virtual DbSet<VwpCustomerProfile> VwpCustomerProfiles { get; set; }
 
     public virtual DbSet<VwpEmployeeProfile> VwpEmployeeProfiles { get; set; }
@@ -1045,6 +1047,24 @@ public partial class LaptopWebDb06Context : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.MemoryType)
                 .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.ProductName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.UnitPrice).HasColumnType("decimal(15, 2)");
+        });
+
+        modelBuilder.Entity<VwmProduct>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vwm_Products");
+
+            entity.Property(e => e.CategoryName)
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.CompanyName)
+                .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.ProductName)
                 .HasMaxLength(100)
