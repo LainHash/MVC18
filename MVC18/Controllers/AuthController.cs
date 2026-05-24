@@ -14,6 +14,20 @@ namespace MVC18.Controllers
         }
 
         [HttpGet]
+        public IActionResult Details(string role)
+        {
+            switch (role)
+            {
+                case "Customer":
+                    return RedirectToAction("Details", "Customer");
+                case "Employee":
+                    return RedirectToAction("Details", "Employee");
+                default:
+                    return NotFound();
+            }
+        }
+
+        [HttpGet]
         public IActionResult Login()
         {
             return View();

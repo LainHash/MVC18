@@ -19,7 +19,13 @@ namespace MVC18.Controllers
         public async Task<IActionResult> Index([FromQuery] ProductQuery query)
         {
             var result = await _productService.GetAllAsync(query);
-            return View(result.Items);
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_ProductGrid", result);
+            }
+
+            return View(result);
         }
 
         [Authorize(Policy = "Manager")]

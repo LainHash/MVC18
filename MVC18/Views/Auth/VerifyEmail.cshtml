@@ -1,0 +1,63 @@
+@model MVC18.DTOs.Auth.VerifyEmailDTO
+
+@{
+    ViewData["Title"] = "Xác nhận Email";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb mb-5">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h4 class="text-white display-4 mb-4 wow fadeInDown" data-wow-delay="0.1s">Xác nhận Email</h4>
+        <ol class="breadcrumb d-flex justify-content-center mb-0 wow fadeInDown" data-wow-delay="0.3s">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active text-primary">Xác nhận Email</li>
+        </ol>    
+    </div>
+</div>
+<!-- Header End -->
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-envelope-open-text fa-4x text-primary mb-3"></i>
+                        <h3 class="fw-bold">Xác nhận tài khoản</h3>
+                        <p class="text-muted">Vui lòng nhập mã xác nhận đã được gửi đến email của bạn.</p>
+                    </div>
+
+                    <form asp-action="VerifyEmail" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <!-- Ẩn trường Email đi vì ta đã truyền model vào -->
+                        <input type="hidden" asp-for="Email" />
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Code" class="form-control" placeholder="Nhập mã xác nhận" />
+                            <label asp-for="Code">Mã xác nhận (Code)</label>
+                            <span asp-validation-for="Code" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold">
+                                Xác nhận ngay
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <a asp-action="Login" class="text-secondary text-decoration-none">
+                            <i class="fas fa-arrow-left me-1"></i> Quay lại trang Đăng nhập
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

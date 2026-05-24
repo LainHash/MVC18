@@ -1,4 +1,5 @@
-@model IEnumerable<MVC18.DTOs.Products.ProductDTO>
+@using MVC18.Helpers.Constants.Misc
+@model MVC18.ResultModels.Misc.PagedResult<MVC18.DTOs.Products.ProductDTO>
 
 @{
     ViewData["Title"] = "Sản phẩm";
@@ -17,5 +18,106 @@
 </div>
 <!-- Header End -->
 
+<!-- Filter Section -->
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <form id="filterForm" class="row g-3">
+                <div class="col-md-4">
+                    <input type="text" 
+                        name="Keyword" 
+                        class="form-control" 
+                        placeholder="Tìm kiếm sản phẩm..." 
+                        value="@Context.Request.Query["Keyword"]" onchange="this.form.submit()">
+                </div>
+                <div class="col-md-3">
+                    <select name="CategoryName" class="form-select" onchange="this.form.submit()">
+                        <option value="">Tất cả danh mục</option>
+                        <option value="@CategoryConstants.Laptop" selected="@(Context.Request.Query["CategoryName"] == CategoryConstants.Laptop)">Laptop</option>
+                        <option value="@CategoryConstants.Cpu" selected="@(Context.Request.Query["CategoryName"] == CategoryConstants.Cpu)">CPU</option>
+                        <option value="@CategoryConstants.Gpu" selected="@(Context.Request.Query["CategoryName"] == CategoryConstants.Gpu)">GPU</option>
+                        <option value="@CategoryConstants.Ram" selected="@(Context.Request.Query["CategoryName"] == CategoryConstants.Ram)">RAM</option>
+                        <option value="@CategoryConstants.Storage" selected="@(Context.Request.Query["CategoryName"] == CategoryConstants.Storage)">Lưu trữ</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="SortBy" class="form-select" onchange="this.form.submit()">
+                        <option value="@SortByConstants.CreatedAtDesc" selected="@(Context.Request.Query["SortBy"] == SortByConstants.CreatedAtDesc)">Mới nhất</option>
+                        <option value="@SortByConstants.CreatedAtAsc" selected="@(Context.Request.Query["SortBy"] == SortByConstants.CreatedAtAsc)">Cũ nhất</option>
+                        <option value="@SortByConstants.PriceAsc" selected="@(Context.Request.Query["SortBy"] == SortByConstants.PriceAsc)">Giá tăng dần</option>
+                        <option value="@SortByConstants.PriceDesc" selected="@(Context.Request.Query["SortBy"] == SortByConstants.PriceDesc)">Giá giảm dần</option>
+                        <option value="@SortByConstants.NameAsc" selected="@(Context.Request.Query["SortBy"] == SortByConstants.NameAsc)">Tên A-Z</option>
+                        <option value="@SortByConstants.NameDesc" selected="@(Context.Request.Query["SortBy"] == SortByConstants.NameDesc)">Tên Z-A</option>
+                    </select>
+                </div>
+                <!-- Hidden page input -->
+                <input type="hidden" name="Page" id="pageInput" value="1" />
+            </form>
+        </div>
+    </div>
 
-@await Html.PartialAsync("_ProductGrid", Model)
+    <!-- Product Grid Container -->
+    <div id="productGridContainer">
+        @await Html.PartialAsync("_ProductGrid", Model)
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Function to load products via AJAX
+            function loadProducts(url) {
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (result) {
+                        $('#productGridContainer').html(result);
+                        // Optional: Scroll to top of grid
+                        $('html, body').animate({
+                            scrollTop: $('#filterForm').offset().top - 100
+                        }, 500);
+                    },
+                    error: function () {
+                        alert('Đã xảy ra lỗi khi tải dữ liệu sản phẩm.');
+                    }
+                });
+            }
+
+            // Handle filter form submit
+            $('#filterForm').on('submit', function (e) {
+                e.preventDefault();
+                $('#pageInput').val(1); // Reset to page 1 on filter change
+                
+                var queryParams = $(this).serialize();
+                var url = '@Url.Action("Index", "Product")' + '?' + queryParams;
+                
+                loadProducts(url);
+                
+                // Update browser URL without reloading
+                window.history.pushState({path: url}, '', url);
+            });
+
+            // Handle pagination clicks using event delegation since buttons are loaded dynamically
+            $(document).on('click', '.pagination-link', function (e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                
+                if (page) {
+                    $('#pageInput').val(page);
+                    var queryParams = $('#filterForm').serialize();
+                    var url = '@Url.Action("Index", "Product")' + '?' + queryParams;
+                    
+                    loadProducts(url);
+                    
+                    // Update browser URL without reloading
+                    window.history.pushState({path: url}, '', url);
+                }
+            });
+
+            // Handle back/forward browser buttons
+            $(window).on('popstate', function () {
+                loadProducts(location.href);
+            });
+        });
+    </script>
+}

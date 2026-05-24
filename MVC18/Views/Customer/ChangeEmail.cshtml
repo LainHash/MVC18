@@ -1,0 +1,92 @@
+@model MVC18.DTOs.Users.Update.ChangeEmailDTO
+
+@{
+    ViewData["Title"] = "Đổi Email";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb mb-5">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h4 class="text-white display-4 mb-4 wow fadeInDown" data-wow-delay="0.1s">Thay đổi Email</h4>
+        <ol class="breadcrumb d-flex justify-content-center mb-0 wow fadeInDown" data-wow-delay="0.3s">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Customer" asp-action="Index">Tài khoản</a></li>
+            <li class="breadcrumb-item active text-primary">Đổi Email</li>
+        </ol>    
+    </div>
+</div>
+<!-- Header End -->
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush rounded">
+                        <a asp-action="Index" class="list-group-item list-group-item-action fw-bold border-0 rounded-top">
+                            <i class="fas fa-home me-2 w-20px"></i> Bảng điều khiển
+                        </a>
+                        <a asp-action="Details" class="list-group-item list-group-item-action fw-bold border-0">
+                            <i class="fas fa-user me-2 w-20px"></i> Thông tin cá nhân
+                        </a>
+                        <a asp-controller="Order" asp-action="MyOrders" class="list-group-item list-group-item-action fw-bold border-0">
+                            <i class="fas fa-box me-2 w-20px"></i> Đơn hàng của tôi
+                        </a>
+                        <a asp-action="UpdateProfile" class="list-group-item list-group-item-action fw-bold border-0">
+                            <i class="fas fa-edit me-2 w-20px"></i> Chỉnh sửa hồ sơ
+                        </a>
+                        <a asp-action="ChangePassword" class="list-group-item list-group-item-action fw-bold border-0">
+                            <i class="fas fa-key me-2 w-20px"></i> Đổi mật khẩu
+                        </a>
+                        <a asp-action="ChangeEmail" class="list-group-item list-group-item-action active fw-bold border-0 rounded-bottom">
+                            <i class="fas fa-envelope me-2 w-20px"></i> Đổi email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-lg-9">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-white border-bottom p-4">
+                    <h5 class="fw-bold mb-0">Thay đổi địa chỉ Email</h5>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="ChangeEmail" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="OldEmail" class="form-control" placeholder="Email cũ" />
+                            <label asp-for="OldEmail">Email hiện tại *</label>
+                            <span asp-validation-for="OldEmail" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="NewEmail" class="form-control" placeholder="Email mới" />
+                            <label asp-for="NewEmail">Email mới *</label>
+                            <span asp-validation-for="NewEmail" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                            <a asp-action="Details" class="btn btn-light rounded-pill px-4 me-2">Hủy bỏ</a>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                                Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .w-20px { width: 20px; text-align: center; }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

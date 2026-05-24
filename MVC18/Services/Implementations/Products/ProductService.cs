@@ -36,7 +36,9 @@ namespace MVC18.Services.Implementations.Products
 
         public async Task<PagedResult<ProductDTO>> GetAllAsync(ProductQuery query)
         {
-            var list = _context.VwProducts.AsQueryable();
+            var list = _context.VwProducts
+                .Where(p => !p.IsDeleted)
+                .AsQueryable();
 
             if(!string.IsNullOrEmpty(query.Keyword))
             {

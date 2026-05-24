@@ -1,5 +1,160 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+@model MVC18.DTOs.Auth.RegisterDTO
+
 @{
+    ViewData["Title"] = "Đăng ký";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb mb-5">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h4 class="text-white display-4 mb-4 wow fadeInDown" data-wow-delay="0.1s">Đăng ký tài khoản</h4>
+        <ol class="breadcrumb d-flex justify-content-center mb-0 wow fadeInDown" data-wow-delay="0.3s">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active text-primary">Đăng ký</li>
+        </ol>    
+    </div>
+</div>
+<!-- Header End -->
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-5">
+                    <div class="text-center mb-5">
+                        <i class="fas fa-user-plus fa-4x text-primary mb-3"></i>
+                        <h3 class="fw-bold">Tạo tài khoản mới</h3>
+                        <p class="text-muted">Vui lòng điền đầy đủ thông tin bên dưới</p>
+                    </div>
+
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                        <h5 class="text-primary mb-3 border-bottom pb-2">Thông tin đăng nhập</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Username" class="form-control" placeholder="Tên đăng nhập" />
+                                    <label asp-for="Username">Tên đăng nhập *</label>
+                                    <span asp-validation-for="Username" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Email" class="form-control" placeholder="Email" />
+                                    <label asp-for="Email">Địa chỉ Email *</label>
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Password" type="password" class="form-control" placeholder="Mật khẩu" />
+                                    <label asp-for="Password">Mật khẩu *</label>
+                                    <span asp-validation-for="Password" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Xác nhận mật khẩu" />
+                                    <label asp-for="ConfirmPassword">Xác nhận mật khẩu *</label>
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="text-primary mb-3 border-bottom pb-2">Thông tin cá nhân</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="FirstName" class="form-control" placeholder="Họ" />
+                                    <label asp-for="FirstName">Họ *</label>
+                                    <span asp-validation-for="FirstName" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="LastName" class="form-control" placeholder="Tên" />
+                                    <label asp-for="LastName">Tên *</label>
+                                    <span asp-validation-for="LastName" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Gender" class="form-select">
+                                        <option value="true">Nam</option>
+                                        <option value="false">Nữ</option>
+                                    </select>
+                                    <label asp-for="Gender">Giới tính</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Dob" type="date" class="form-control" placeholder="Ngày sinh" />
+                                    <label asp-for="Dob">Ngày sinh *</label>
+                                    <span asp-validation-for="Dob" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Phone" class="form-control" placeholder="Số điện thoại" />
+                                    <label asp-for="Phone">Số điện thoại *</label>
+                                    <span asp-validation-for="Phone" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="CitizenIdentityCard" class="form-control" placeholder="Số CMND/CCCD" />
+                                    <label asp-for="CitizenIdentityCard">Số CMND/CCCD *</label>
+                                    <span asp-validation-for="CitizenIdentityCard" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5 class="text-primary mb-3 border-bottom pb-2">Địa chỉ liên hệ</h5>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="City" class="form-control" placeholder="Thành phố" />
+                                    <label asp-for="City">Thành phố *</label>
+                                    <span asp-validation-for="City" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Country" class="form-control" placeholder="Quốc gia" />
+                                    <label asp-for="Country">Quốc gia *</label>
+                                    <span asp-validation-for="Country" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input asp-for="Address" class="form-control" placeholder="Địa chỉ chi tiết" />
+                                    <label asp-for="Address">Địa chỉ chi tiết *</label>
+                                    <span asp-validation-for="Address" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold">
+                                <i class="fas fa-check-circle me-2"></i>Đăng ký tài khoản
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0 text-muted">
+                            Đã có tài khoản? 
+                            <a asp-action="Login" class="text-primary fw-bold text-decoration-none">Đăng nhập ngay</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

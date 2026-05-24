@@ -1,0 +1,116 @@
+@model MVC18.DTOs.Users.Customers.CustomerDTO
+
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb mb-5">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h4 class="text-white display-4 mb-4 wow fadeInDown" data-wow-delay="0.1s">Hồ sơ của tôi</h4>
+        <ol class="breadcrumb d-flex justify-content-center mb-0 wow fadeInDown" data-wow-delay="0.3s">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Customer" asp-action="Index">Tài khoản</a></li>
+            <li class="breadcrumb-item active text-primary">Thông tin cá nhân</li>
+        </ol>    
+    </div>
+</div>
+<!-- Header End -->
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4 text-center border-bottom">
+                    <img src="@(string.IsNullOrEmpty(Model.AvatarImage) ? Url.Content("~/img/person-circle.svg") : Model.AvatarImage)"
+                         alt="Avatar" class="img-fluid rounded-circle mb-3 border border-3 border-primary" style="width: 120px; height: 120px; object-fit: cover;" />
+                    <h5 class="fw-bold mb-0">@Model.LastName @Model.FirstName</h5>
+                    <p class="text-muted small">@Model.Email</p>
+                    <span class="badge bg-primary rounded-pill px-3 py-2">Thành viên: @Model.RoleName</span>
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush rounded-bottom">
+                        <a asp-action="Index" class="list-group-item list-group-item-action fw-bold border-0">
+                            <i class="fas fa-home me-2 w-20px"></i> Bảng điều khiển
+                        </a>
+                        <a asp-action="Details" class="list-group-item list-group-item-action active fw-bold border-0">
+                            <i class="fas fa-user me-2 w-20px"></i> Thông tin cá nhân
+                        </a>
+                        <a asp-controller="Order" asp-action="MyOrders" class="list-group-item list-group-item-action fw-bold border-0">
+                            <i class="fas fa-box me-2 w-20px"></i> Đơn hàng của tôi
+                        </a>
+                        <a asp-action="UpdateProfile" class="list-group-item list-group-item-action fw-bold border-0">
+                            <i class="fas fa-edit me-2 w-20px"></i> Chỉnh sửa hồ sơ
+                        </a>
+                        <a asp-action="ChangePassword" class="list-group-item list-group-item-action fw-bold border-0">
+                            <i class="fas fa-key me-2 w-20px"></i> Đổi mật khẩu
+                        </a>
+                        <a asp-action="ChangeEmail" class="list-group-item list-group-item-action fw-bold border-0 rounded-bottom">
+                            <i class="fas fa-envelope me-2 w-20px"></i> Đổi email
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-lg-9">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-white border-bottom p-4 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">Chi tiết thông tin</h5>
+                    <a asp-action="UpdateProfile" class="btn btn-outline-primary btn-sm rounded-pill">
+                        <i class="fas fa-edit me-1"></i> Chỉnh sửa
+                    </a>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row mb-3 border-bottom pb-3">
+                        <div class="col-sm-3 text-muted fw-bold">Tên đăng nhập</div>
+                        <div class="col-sm-9">@Model.Username</div>
+                    </div>
+                    <div class="row mb-3 border-bottom pb-3">
+                        <div class="col-sm-3 text-muted fw-bold">Họ và tên</div>
+                        <div class="col-sm-9">@Model.LastName @Model.FirstName</div>
+                    </div>
+                    <div class="row mb-3 border-bottom pb-3">
+                        <div class="col-sm-3 text-muted fw-bold">Giới tính</div>
+                        <div class="col-sm-9">@(Model.Gender ? "Nam" : "Nữ")</div>
+                    </div>
+                    <div class="row mb-3 border-bottom pb-3">
+                        <div class="col-sm-3 text-muted fw-bold">Ngày sinh</div>
+                        <div class="col-sm-9">@Model.Dob.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="row mb-3 border-bottom pb-3">
+                        <div class="col-sm-3 text-muted fw-bold">Số điện thoại</div>
+                        <div class="col-sm-9">@Model.Phone</div>
+                    </div>
+                    <div class="row mb-3 border-bottom pb-3">
+                        <div class="col-sm-3 text-muted fw-bold">CCCD/CMND</div>
+                        <div class="col-sm-9">@Model.CitizenIdentityCard</div>
+                    </div>
+                    <div class="row mb-3 border-bottom pb-3">
+                        <div class="col-sm-3 text-muted fw-bold">Địa chỉ</div>
+                        <div class="col-sm-9">@Model.Address, @Model.City, @Model.Country</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3 text-muted fw-bold">Mã khách hàng</div>
+                        <div class="col-sm-9"><span class="badge bg-light text-dark border">@Model.CustomerCode</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .w-20px { width: 20px; text-align: center; }
+</style>

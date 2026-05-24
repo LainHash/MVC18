@@ -1,4 +1,11 @@
-﻿<!-- Navbar & Hero Start -->
+﻿@{
+    var jwt = Context.Request.Cookies["jwt"];
+
+    var username = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
+    var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+}
+
+<!-- Navbar & Hero Start -->
 <div class="container-fluid nav-bar sticky-top px-0 px-lg-4 py-2 py-lg-0">
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light">
@@ -46,7 +53,42 @@
                         Liên hệ
                     </a>
                 </div>
-                <a href="#" class="btn btn-primary rounded-pill py-2 px-4">Mua ngay</a>
+                @if (username != null)
+                {
+                    <div class="nav-item dropdown">
+                        <a asp-controller="Auth"
+                           asp-action="Details"
+                           asp-route-role="@role"
+                           class="nav-link dropdown-toggle">
+                            xin chào, @username
+                        </a>
+                        <div class="dropdown-menu rounded-0 m-0">
+                            @* <a asp-controller="Customer"
+                               asp-action="Index"
+                               class="dropdown-item">
+                                Tài khoản
+                            </a> *@
+                            <a asp-controller="Account"
+                               asp-action="Logout"
+                               class="dropdown-item">
+                                Đăng xuất
+                            </a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a asp-controller="Auth"
+                       asp-action="Login"
+                       class="btn btn-primary rounded-pill py-2 px-4 me-2">
+                        Đăng nhập
+                    </a>
+                    <a asp-controller="Auth"
+                       asp-action="Register"
+                       class="btn btn-outline-primary rounded-pill py-2 px-4">
+                        Đăng ký
+                    </a>
+                }
             </div>
         </nav>
     </div>

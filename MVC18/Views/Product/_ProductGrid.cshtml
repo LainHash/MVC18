@@ -1,11 +1,11 @@
-﻿@model IEnumerable<MVC18.DTOs.Products.ProductDTO>
+@model MVC18.ResultModels.Misc.PagedResult<MVC18.DTOs.Products.ProductDTO>
 
 <!-- Product Grid -->
 <div class="products-grid">
-    @if (Model.Any())
+    @if (Model.Items != null && Model.Items.Any())
     {
         <div class="row g-4">
-            @foreach (var product in Model)
+            @foreach (var product in Model.Items)
             {
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="product-card h-100" data-product-id="@product.ProductUuid">
@@ -97,6 +97,44 @@
                 </div>
             }
         </div>
+        
+        <!-- Pagination Controls -->
+        @if (Model.TotalPages > 1)
+        {
+            <div class="col-12 text-center wow fadeInUp mt-5" data-wow-delay="0.1s">
+                <div class="custom-pagination">
+                    @if (Model.Page > 1)
+                    {
+                        <a href="javascript:void(0)" class="rounded pagination-link" data-page="@(Model.Page - 1)">&laquo;</a>
+                    }
+                    else
+                    {
+                        <a href="javascript:void(0)" class="rounded disabled">&laquo;</a>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        if (i == Model.Page)
+                        {
+                            <a href="javascript:void(0)" class="active rounded pagination-link" data-page="@i">@i</a>
+                        }
+                        else
+                        {
+                            <a href="javascript:void(0)" class="rounded pagination-link" data-page="@i">@i</a>
+                        }
+                    }
+
+                    @if (Model.Page < Model.TotalPages)
+                    {
+                        <a href="javascript:void(0)" class="rounded pagination-link" data-page="@(Model.Page + 1)">&raquo;</a>
+                    }
+                    else
+                    {
+                        <a href="javascript:void(0)" class="rounded disabled">&raquo;</a>
+                    }
+                </div>
+            </div>
+        }
     }
     else
     {

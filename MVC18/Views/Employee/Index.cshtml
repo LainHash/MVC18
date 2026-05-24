@@ -1,0 +1,73 @@
+@{
+    ViewData["Title"] = "Trang Nhân viên";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb mb-5">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h4 class="text-white display-4 mb-4 wow fadeInDown" data-wow-delay="0.1s">Quản lý nội bộ</h4>
+        <ol class="breadcrumb d-flex justify-content-center mb-0 wow fadeInDown" data-wow-delay="0.3s">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active text-primary">Nhân viên</li>
+        </ol>    
+    </div>
+</div>
+<!-- Header End -->
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">Menu Nội bộ</h5>
+                    <div class="list-group list-group-flush">
+                        <a asp-action="Index" class="list-group-item list-group-item-action active fw-bold border-0 rounded-1 mb-1">
+                            <i class="fas fa-home me-2"></i> Bảng điều khiển
+                        </a>
+                        <a asp-action="Details" class="list-group-item list-group-item-action fw-bold border-0 rounded-1 mb-1">
+                            <i class="fas fa-user-tie me-2"></i> Hồ sơ nhân viên
+                        </a>
+                        <!-- Các tính năng quản lý khác có thể thêm ở đây -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-lg-9">
+            <div class="card shadow-sm border-0 rounded-3 h-100">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-desktop fa-4x text-primary mb-3"></i>
+                        <h3 class="fw-bold">Hệ thống quản lý</h3>
+                        <p class="text-muted">Chào mừng bạn đến với trang quản lý dành cho nhân viên.</p>
+                    </div>
+
+                    <div class="row g-4 mt-2 justify-content-center">
+                        <div class="col-md-6">
+                            <a asp-action="Details" class="text-decoration-none">
+                                <div class="card bg-light border-0 text-center p-4 h-100 rounded-3 transition-hover">
+                                    <i class="fas fa-id-badge fa-3x text-secondary mb-3"></i>
+                                    <h5 class="text-dark">Hồ sơ cá nhân</h5>
+                                    <p class="text-muted small mb-0">Xem và cập nhật thông tin nhân viên, đổi mật khẩu.</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .transition-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .transition-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
+</style>
