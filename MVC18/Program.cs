@@ -5,10 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using MVC18.Data;
 using MVC18.Services.Implementations.Auth;
 using MVC18.Services.Implementations.Products;
-using MVC18.Services.Implementations.Users;
 using MVC18.Services.Interfaces.Auth;
 using MVC18.Services.Interfaces.Products;
-using MVC18.Services.Interfaces.Users;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -68,11 +66,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Customer", policy => policy.RequireClaim(System.Security.Claims.ClaimTypes.Role, "1"));
+    options.AddPolicy("Customer", policy => policy.RequireClaim(System.Security.Claims.ClaimTypes.Role, "Customer"));
     options.AddPolicy("Manager", policy => policy.RequireAssertion(context =>
     {
         var roleClaim = context.User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
-        return roleClaim != null && roleClaim != "1";
+        return roleClaim != null && roleClaim != "Customer";
     }));
 });
 
@@ -88,8 +86,9 @@ builder.Services.AddScoped<IGpuService, GpuService>();
 builder.Services.AddScoped<IRamService, RamService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IEmailService, MVC18.Services.Implementations.Auth.EmailService>();
+builder.Services.AddScoped<MVC18.Services.Interfaces.Users.Customers.ICustomerService, MVC18.Services.Implementations.Users.Customers.CustomerService>();
+builder.Services.AddScoped<MVC18.Services.Interfaces.Users.Employees.IEmployeeService, MVC18.Services.Implementations.Users.Employees.EmployeeService>();
 
 
 var app = builder.Build();

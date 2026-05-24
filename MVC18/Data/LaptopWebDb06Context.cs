@@ -104,6 +104,10 @@ public partial class LaptopWebDb06Context : DbContext
 
     public virtual DbSet<VwdStorageDetail> VwdStorageDetails { get; set; }
 
+    public virtual DbSet<VwpCustomerProfile> VwpCustomerProfiles { get; set; }
+
+    public virtual DbSet<VwpEmployeeProfile> VwpEmployeeProfiles { get; set; }
+
     public virtual DbSet<VwsCancelledOrder> VwsCancelledOrders { get; set; }
 
     public virtual DbSet<VwsCompletedOrder> VwsCompletedOrders { get; set; }
@@ -264,6 +268,7 @@ public partial class LaptopWebDb06Context : DbContext
 
             entity.HasIndex(e => e.Piid, "UQ__Employee__5F86BE412CC3F7B0").IsUnique();
 
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())");
             entity.Property(e => e.EmployeeCode)
                 .HasMaxLength(20)
                 .IsFixedLength();
@@ -272,6 +277,7 @@ public partial class LaptopWebDb06Context : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasDefaultValue("IsActive");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("(sysdatetime())");
 
             entity.HasOne(d => d.Department).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.DepartmentId)
@@ -1044,6 +1050,79 @@ public partial class LaptopWebDb06Context : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.UnitPrice).HasColumnType("decimal(15, 2)");
+        });
+
+        modelBuilder.Entity<VwpCustomerProfile>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vwp_CustomerProfiles");
+
+            entity.Property(e => e.Balance).HasColumnType("decimal(15, 2)");
+            entity.Property(e => e.CitizenIdentityCard)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.City).HasMaxLength(50);
+            entity.Property(e => e.Country).HasMaxLength(50);
+            entity.Property(e => e.CustomerCode)
+                .HasMaxLength(20)
+                .IsFixedLength();
+            entity.Property(e => e.Dob).HasColumnName("DOB");
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.RoleName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<VwpEmployeeProfile>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vwp_EmployeeProfiles");
+
+            entity.Property(e => e.Balance).HasColumnType("decimal(15, 2)");
+            entity.Property(e => e.CitizenIdentityCard)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.City).HasMaxLength(50);
+            entity.Property(e => e.Country).HasMaxLength(50);
+            entity.Property(e => e.DepartmentName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Dob).HasColumnName("DOB");
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.EmployeeCode)
+                .HasMaxLength(20)
+                .IsFixedLength();
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.PositionName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.RoleName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Status)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Username)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<VwsCancelledOrder>(entity =>

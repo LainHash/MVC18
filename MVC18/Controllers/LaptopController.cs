@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC18.DTOs.Products.Create;
 using MVC18.DTOs.Products.Update;
@@ -24,12 +25,14 @@ namespace MVC18.Controllers
             return View(result.Laptop);
         }
 
+        [Authorize(Policy = "Manager")]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Policy = "Manager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateLaptopDTO dto)
@@ -49,6 +52,8 @@ namespace MVC18.Controllers
             TempData["SuccessMessage"] = result.Message;
             return RedirectToAction(nameof(Details), new { id = result.Laptop!.ProductUuid });
         }
+
+        [Authorize(Policy = "Manager")]
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -73,6 +78,7 @@ namespace MVC18.Controllers
             return View(dto);
         }
 
+        [Authorize(Policy = "Manager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, UpdateLaptopDTO dto)

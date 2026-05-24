@@ -37,7 +37,7 @@ namespace MVC18.Services.Implementations.Auth
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.UserUuid.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.Role.RoleName)
@@ -82,12 +82,12 @@ namespace MVC18.Services.Implementations.Auth
 
         public void Logout()
         {
-            
+
         }
 
         public void RefeshToken()
         {
-            
+
         }
 
         public async Task<BaseResult> VerifyEmailAsync(VerifyEmailDTO dto)
@@ -102,18 +102,30 @@ namespace MVC18.Services.Implementations.Auth
                     {
                         user.IsActive = true;
                         await _context.SaveChangesAsync();
-                        _cache.Remove(cacheKey); // Remove code after successful verification
+                        _cache.Remove(cacheKey);
 
-                        return new BaseResult { Success = true, Message = "Xác thực email thành công." };
+                        return new BaseResult
+                        {
+                            Success = true,
+                            Message = "Xác thực email thành công."
+                        };
                     }
                 }
                 else
                 {
-                    return new BaseResult { Success = false, Message = "Mã xác nhận không chính xác." };
+                    return new BaseResult
+                    {
+                        Success = false,
+                        Message = "Mã xác nhận không chính xác."
+                    };
                 }
             }
 
-            return new BaseResult { Success = false, Message = "Mã xác nhận đã hết hạn hoặc không tồn tại." };
+            return new BaseResult
+            {
+                Success = false,
+                Message = "Mã xác nhận đã hết hạn hoặc không tồn tại."
+            };
         }
 
         public async Task<RegisterResult> RegisterAsync(RegisterDTO dto)
@@ -123,45 +135,37 @@ namespace MVC18.Services.Implementations.Auth
             {
                 if (await _context.Users.AnyAsync(u => u.Email == dto.Email))
                 {
-                    return new RegisterResult { Success = false, Message = "Email đã được sử dụng." };
+                    return new RegisterResult
+                    {
+                        Success = false,
+                        Message = "Email đã được sử dụng."
+                    };
                 }
 
                 if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
                 {
-                    return new RegisterResult { Success = false, Message = "Tên đăng nhập đã tồn tại." };
+                    return new RegisterResult
+                    {
+                        Success = false,
+                        Message = "Tên đăng nhập đã tồn tại."
+                    };
                 }
 
                 var customerRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "Customer");
                 if (customerRole == null)
                 {
-                    return new RegisterResult { Success = false, Message = "Lỗi hệ thống: Không tìm thấy quyền Customer." };
+                    return new RegisterResult
+                    {
+                        Success = false,
+                        Message = "Lỗi hệ thống: Không tìm thấy quyền Customer."
+                    };
                 }
 
-                var user = new User
-                {
-                    Username = dto.Username,
-                    Email = dto.Email,
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-                    RoleId = customerRole.RoleId,
-                    IsActive = false,
-                    Balance = 0,
-                    UserUuid = Guid.NewGuid()
-                };
+                var user = _mapper.Map<User>(dto);
                 _context.Users.Add(user);
                 await _context.SaveChangesAsync();
 
-                var pi = new PersonalInformation
-                {
-                    FirstName = dto.FirstName,
-                    LastName = dto.LastName,
-                    Gender = dto.Gender,
-                    Dob = dto.Dob,
-                    City = dto.City,
-                    Country = dto.Country,
-                    Address = dto.Address,
-                    Phone = dto.Phone,
-                    CitizenIdentityCard = dto.CitizenIdentityCard
-                };
+                var pi = _mapper.Map<PersonalInformation>(dto);
                 _context.PersonalInformations.Add(pi);
                 await _context.SaveChangesAsync();
 
@@ -178,14 +182,11 @@ namespace MVC18.Services.Implementations.Auth
 
                 await transaction.CommitAsync();
 
-                // Generate 6-digit code
                 Random random = new Random();
                 string code = random.Next(100000, 999999).ToString();
-                
-                // Store in cache for 15 minutes
+
                 _cache.Set($"VerifyEmail_{dto.Email}", code, TimeSpan.FromMinutes(15));
 
-                // Send welcome email
                 try
                 {
                     string subject = "Xác thực email đăng ký tài khoản";
@@ -198,7 +199,11 @@ namespace MVC18.Services.Implementations.Auth
                 }
                 catch (Exception)
                 {
-                    // Ignore email sending error
+                    return new RegisterResult
+                    {
+                        Success = false,
+                        Message = "Đăng ký thành công nhưng gửi email xác thực thất bại. Vui lòng liên hệ hỗ trợ để được giúp đỡ."
+                    };
                 }
 
                 return new RegisterResult

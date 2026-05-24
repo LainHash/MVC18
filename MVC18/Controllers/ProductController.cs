@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MVC18.DTOs.Misc;
 using MVC18.Helpers.Constants.Misc;
 using MVC18.Services.Interfaces.Products;
@@ -21,6 +22,7 @@ namespace MVC18.Controllers
             return View(result.Items);
         }
 
+        [Authorize(Policy = "Manager")]
         public async Task<IActionResult> Create(string category)
         {
             switch (category)
@@ -59,6 +61,7 @@ namespace MVC18.Controllers
             return NotFound();
         }
 
+        [Authorize(Policy = "Manager")]
         public async Task<IActionResult> Edit(string category, Guid id)
         {
             switch (category)
@@ -77,6 +80,7 @@ namespace MVC18.Controllers
             return NotFound();
         }
 
+        [Authorize(Policy = "Manager")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var result = await _productService.DeleteAsync(id);
