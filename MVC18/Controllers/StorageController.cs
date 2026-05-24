@@ -61,19 +61,7 @@ namespace MVC18.Controllers
             if (!result.Success)
                 return NotFound();
 
-            var dto = new UpdateStorageDTO
-            {
-                ProductName   = result.Storage!.ProductName,
-                ImageUrl      = result.Storage.ImageUrl ?? string.Empty,
-                Description   = result.Storage.Description,
-                UnitPrice     = result.Storage.UnitPrice,
-                UnitsInStock  = result.Storage.UnitsInStock,
-                Capacity      = result.Storage.Capacity,
-                MemoryType    = result.Storage.MemoryType,
-                InterfaceType = result.Storage.InterfaceType,
-                ReadSpeed     = result.Storage.ReadSpeed,
-                WriteSpeed    = result.Storage.WriteSpeed
-            };
+            var dto = _storageService.GetUpdateAsync(result.Storage!);
             return View(dto);
         }
 

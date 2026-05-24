@@ -1,4 +1,5 @@
 ﻿using MVC18.DTOs.Products;
+using MVC18.DTOs.Products.Update;
 using MVC18.ResultModels;
 
 namespace MVC18.ResultModels.Products
@@ -7,5 +8,7 @@ namespace MVC18.ResultModels.Products
     {
         public LaptopDTO? Laptop { get; set; }
         public List<LaptopDTO>? Laptops { get; set; }
+
+        public UpdateLaptopDTO? LaptopUpdate { get; set; }
     }
 }

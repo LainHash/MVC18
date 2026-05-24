@@ -61,18 +61,7 @@ namespace MVC18.Controllers
             if (!result.Success)
                 return NotFound();
 
-            var dto = new UpdateRamDTO
-            {
-                ProductName  = result.Ram!.ProductName,
-                ImageUrl     = result.Ram.ImageUrl ?? string.Empty,
-                Description  = result.Ram.Description,
-                UnitPrice    = result.Ram.UnitPrice,
-                UnitsInStock = result.Ram.UnitsInStock,
-                Capacity     = result.Ram.Capacity,
-                Gen          = result.Ram.Gen,
-                Speed        = result.Ram.Speed,
-                Kit          = result.Ram.Kit
-            };
+            var dto = _ramService.GetUpdateAsync(result.Ram!);
             return View(dto);
         }
 

@@ -38,33 +38,33 @@ namespace MVC18.Services.Implementations.Products
                 {
                     ProductName = dto.ProductName,
                     Description = dto.Description,
-                    CategoryId  = dto.CategoryId,
-                    SupplierId  = dto.CompanyId,
-                    ImageId     = image.ImageId,
-                    IsDeleted   = false,
-                    CreatedAt   = DateTime.Now,
-                    UpdatedAt   = DateTime.Now
+                    CategoryId = dto.CategoryId,
+                    SupplierId = dto.CompanyId,
+                    ImageId = image.ImageId,
+                    IsDeleted = false,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
                 };
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
 
                 var sku = new ProductSku
                 {
-                    ProductId    = product.ProductId,
-                    UnitPrice    = dto.UnitPrice,
+                    ProductId = product.ProductId,
+                    UnitPrice = dto.UnitPrice,
                     UnitsInStock = dto.UnitsInStock,
                     Discontinued = false,
-                    IsDeleted    = false
+                    IsDeleted = false
                 };
                 _context.ProductSkus.Add(sku);
                 await _context.SaveChangesAsync();
 
                 var ram = new Ram
                 {
-                    Capacity     = dto.Capacity,
-                    Gen          = dto.Gen,
-                    Speed        = dto.Speed,
-                    Kit          = dto.Kit,
+                    Capacity = dto.Capacity,
+                    Gen = dto.Gen,
+                    Speed = dto.Speed,
+                    Kit = dto.Kit,
                     ProductSkuId = sku.ProductSkuId
                 };
                 _context.Rams.Add(ram);
@@ -79,7 +79,7 @@ namespace MVC18.Services.Implementations.Products
                 {
                     Success = true,
                     Message = "Tạo RAM thành công.",
-                    Ram     = _mapper.Map<RamDTO>(created)
+                    Ram = _mapper.Map<RamDTO>(created)
                 };
             }
             catch (Exception ex)
@@ -126,6 +126,17 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
+        public RamResult GetUpdateAsync(RamDTO dto)
+        {
+            var updateDTO = _mapper.Map<UpdateRamDTO>(dto);
+            return new RamResult
+            {
+                Success = true,
+                Message = "Lấy dữ liệu cập nhật RAM thành công.",
+                RamUpdate = updateDTO
+            };
+        }
+
         public SelectList SelectRams()
         {
             var rams = _context.VwdRamDetails
@@ -151,35 +162,49 @@ namespace MVC18.Services.Implementations.Products
                     .FirstOrDefaultAsync(p => p.ProductUuid == id && !p.IsDeleted);
 
                 if (product == null)
-                    return new RamResult { Success = false, Message = "RAM không tồn tại." };
+                {
+                    return new RamResult
+                    {
+                        Success = false,
+                        Message = "RAM không tồn tại."
+                    };
+                }
 
                 var sku = product.ProductSku;
                 if (sku == null)
-                    return new RamResult { Success = false, Message = "Không tìm thấy SKU của RAM." };
+                {
+                    return new RamResult
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy SKU của RAM."
+                    };
+                }
 
                 var ram = sku.Ram;
                 if (ram == null)
-                    return new RamResult { Success = false, Message = "Không tìm thấy dữ liệu RAM." };
+                {
+                    return new RamResult
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy dữ liệu RAM."
+                    };
+                }
 
-                // Cập nhật Image
                 product.Image.ImageUrl = dto.ImageUrl;
 
-                // Cập nhật Product (gán tay)
                 product.ProductName = dto.ProductName;
                 product.Description = dto.Description;
-                product.CategoryId  = dto.CategoryId;
-                product.SupplierId  = dto.CompanyId;
-                product.UpdatedAt   = DateTime.Now;
+                product.CategoryId = dto.CategoryId;
+                product.SupplierId = dto.CompanyId;
+                product.UpdatedAt = DateTime.Now;
 
-                // Cập nhật ProductSku (gán tay)
-                sku.UnitPrice    = dto.UnitPrice;
+                sku.UnitPrice = dto.UnitPrice;
                 sku.UnitsInStock = dto.UnitsInStock;
 
-                // Cập nhật Ram (gán tay)
                 ram.Capacity = dto.Capacity;
-                ram.Gen      = dto.Gen;
-                ram.Speed    = dto.Speed;
-                ram.Kit      = dto.Kit;
+                ram.Gen = dto.Gen;
+                ram.Speed = dto.Speed;
+                ram.Kit = dto.Kit;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -191,7 +216,7 @@ namespace MVC18.Services.Implementations.Products
                 {
                     Success = true,
                     Message = "Cập nhật RAM thành công.",
-                    Ram     = _mapper.Map<RamDTO>(updated)
+                    Ram = _mapper.Map<RamDTO>(updated)
                 };
             }
             catch (Exception ex)

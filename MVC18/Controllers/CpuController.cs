@@ -61,20 +61,7 @@ namespace MVC18.Controllers
             if (!result.Success)
                 return NotFound();
 
-            var dto = new UpdateCpuDTO
-            {
-                ProductName  = result.Cpu!.ProductName,
-                ImageUrl     = result.Cpu.ImageUrl ?? string.Empty,
-                Description  = result.Cpu.Description,
-                UnitPrice    = result.Cpu.UnitPrice,
-                UnitsInStock = result.Cpu.UnitsInStock,
-                Cores        = result.Cpu.Cores,
-                Logicals     = result.Cpu.Logicals,
-                Tdp          = result.Cpu.Tdp,
-                Socket       = result.Cpu.Socket,
-                Speed        = result.Cpu.Speed,
-                Turbo        = result.Cpu.Turbo
-            };
+            var dto = _cpuService.GetUpdateAsync(result.Cpu!);
             return View(dto);
         }
 

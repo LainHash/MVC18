@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using MVC18.DTOs.Products;
 using MVC18.DTOs.Products.Create;
 using MVC18.DTOs.Products.Update;
 using MVC18.ResultModels.Products;
@@ -10,6 +11,8 @@ namespace MVC18.Services.Interfaces.Products
         Task<StorageResult> GetAllAsync();
         Task<StorageResult> GetOneAsync(Guid id);
         Task<StorageResult> CreateAsync(CreateStorageDTO dto);
+
+        StorageResult GetUpdateAsync(StorageDTO dto);
         Task<StorageResult> UpdateAsync(Guid id, UpdateStorageDTO dto);
 
         SelectList SelectStorages();

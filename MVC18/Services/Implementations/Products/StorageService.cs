@@ -127,6 +127,17 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
+        public StorageResult GetUpdateAsync(StorageDTO dto)
+        {
+            var updateDTO = _mapper.Map<UpdateStorageDTO>(dto);
+            return new StorageResult
+            {
+                Success = true,
+                Message = "Lấy dữ liệu cập nhật Storage thành công.",
+                StorageUpdate = updateDTO
+            };
+        }
+
         public SelectList SelectStorages()
         {
             var storages = _context.VwdStorageDetails

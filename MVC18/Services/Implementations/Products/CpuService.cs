@@ -36,37 +36,37 @@ namespace MVC18.Services.Implementations.Products
 
                 var product = new Product
                 {
-                    ProductName  = dto.ProductName,
-                    Description  = dto.Description,
-                    CategoryId   = dto.CategoryId,
-                    SupplierId   = dto.CompanyId,
-                    ImageId      = image.ImageId,
-                    IsDeleted    = false,
-                    CreatedAt    = DateTime.Now,
-                    UpdatedAt    = DateTime.Now
+                    ProductName = dto.ProductName,
+                    Description = dto.Description,
+                    CategoryId = dto.CategoryId,
+                    SupplierId = dto.CompanyId,
+                    ImageId = image.ImageId,
+                    IsDeleted = false,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
                 };
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
 
                 var sku = new ProductSku
                 {
-                    ProductId      = product.ProductId,
-                    UnitPrice      = dto.UnitPrice,
-                    UnitsInStock   = dto.UnitsInStock,
-                    Discontinued   = false,
-                    IsDeleted      = false
+                    ProductId = product.ProductId,
+                    UnitPrice = dto.UnitPrice,
+                    UnitsInStock = dto.UnitsInStock,
+                    Discontinued = false,
+                    IsDeleted = false
                 };
                 _context.ProductSkus.Add(sku);
                 await _context.SaveChangesAsync();
 
                 var cpu = new Cpu
                 {
-                    Cores        = dto.Cores,
-                    Logicals     = dto.Logicals,
-                    Tdp          = dto.Tdp,
-                    Socket       = dto.Socket,
-                    Speed        = dto.Speed,
-                    Turbo        = dto.Turbo,
+                    Cores = dto.Cores,
+                    Logicals = dto.Logicals,
+                    Tdp = dto.Tdp,
+                    Socket = dto.Socket,
+                    Speed = dto.Speed,
+                    Turbo = dto.Turbo,
                     ProductSkuId = sku.ProductSkuId
                 };
                 _context.Cpus.Add(cpu);
@@ -81,7 +81,7 @@ namespace MVC18.Services.Implementations.Products
                 {
                     Success = true,
                     Message = "Tạo CPU thành công.",
-                    Cpu     = _mapper.Map<CpuDTO>(created)
+                    Cpu = _mapper.Map<CpuDTO>(created)
                 };
             }
             catch (Exception ex)
@@ -127,6 +127,17 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
+        public CpuResult GetUpdateAsync(CpuDTO dto)
+        {
+            var updateDTO = _mapper.Map<UpdateCpuDTO>(dto);
+            return new CpuResult
+            {
+                Success = true,
+                Message = "Lấy dữ liệu CPU để cập nhật thành công.",
+                CpuUpdate = updateDTO
+            };
+        }
+
         public SelectList SelectCpus()
         {
             var cpus = _context.VwdCpuDetails
@@ -152,37 +163,51 @@ namespace MVC18.Services.Implementations.Products
                     .FirstOrDefaultAsync(p => p.ProductUuid == id && !p.IsDeleted);
 
                 if (product == null)
-                    return new CpuResult { Success = false, Message = "CPU không tồn tại." };
+                {
+                    return new CpuResult
+                    {
+                        Success = false,
+                        Message = "CPU không tồn tại."
+                    };
+                }
 
                 var sku = product.ProductSku;
                 if (sku == null)
-                    return new CpuResult { Success = false, Message = "Không tìm thấy SKU của CPU." };
+                {
+                    return new CpuResult
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy SKU của CPU."
+                    };
+                }
 
                 var cpu = sku.Cpu;
                 if (cpu == null)
-                    return new CpuResult { Success = false, Message = "Không tìm thấy dữ liệu CPU." };
+                {
+                    return new CpuResult
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy dữ liệu CPU."
+                    };
+                }
 
-                // Cập nhật Image
                 product.Image.ImageUrl = dto.ImageUrl;
 
-                // Cập nhật Product (gán tay)
                 product.ProductName = dto.ProductName;
                 product.Description = dto.Description;
-                product.CategoryId  = dto.CategoryId;
-                product.SupplierId  = dto.CompanyId;
-                product.UpdatedAt   = DateTime.Now;
+                product.CategoryId = dto.CategoryId;
+                product.SupplierId = dto.CompanyId;
+                product.UpdatedAt = DateTime.Now;
 
-                // Cập nhật ProductSku (gán tay)
-                sku.UnitPrice    = dto.UnitPrice;
+                sku.UnitPrice = dto.UnitPrice;
                 sku.UnitsInStock = dto.UnitsInStock;
 
-                // Cập nhật Cpu (gán tay)
-                cpu.Cores    = dto.Cores;
+                cpu.Cores = dto.Cores;
                 cpu.Logicals = dto.Logicals;
-                cpu.Tdp      = dto.Tdp;
-                cpu.Socket   = dto.Socket;
-                cpu.Speed    = dto.Speed;
-                cpu.Turbo    = dto.Turbo;
+                cpu.Tdp = dto.Tdp;
+                cpu.Socket = dto.Socket;
+                cpu.Speed = dto.Speed;
+                cpu.Turbo = dto.Turbo;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -194,7 +219,7 @@ namespace MVC18.Services.Implementations.Products
                 {
                     Success = true,
                     Message = "Cập nhật CPU thành công.",
-                    Cpu     = _mapper.Map<CpuDTO>(updated)
+                    Cpu = _mapper.Map<CpuDTO>(updated)
                 };
             }
             catch (Exception ex)

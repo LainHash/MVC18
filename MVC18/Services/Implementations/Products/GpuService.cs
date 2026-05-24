@@ -38,38 +38,38 @@ namespace MVC18.Services.Implementations.Products
                 {
                     ProductName = dto.ProductName,
                     Description = dto.Description,
-                    CategoryId  = dto.CategoryId,
-                    SupplierId  = dto.CompanyId,
-                    ImageId     = image.ImageId,
-                    IsDeleted   = false,
-                    CreatedAt   = DateTime.Now,
-                    UpdatedAt   = DateTime.Now
+                    CategoryId = dto.CategoryId,
+                    SupplierId = dto.CompanyId,
+                    ImageId = image.ImageId,
+                    IsDeleted = false,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
                 };
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
 
                 var sku = new ProductSku
                 {
-                    ProductId    = product.ProductId,
-                    UnitPrice    = dto.UnitPrice,
+                    ProductId = product.ProductId,
+                    UnitPrice = dto.UnitPrice,
                     UnitsInStock = dto.UnitsInStock,
                     Discontinued = false,
-                    IsDeleted    = false
+                    IsDeleted = false
                 };
                 _context.ProductSkus.Add(sku);
                 await _context.SaveChangesAsync();
 
                 var gpu = new Gpu
                 {
-                    MemorySize    = dto.MemorySize,
-                    MemoryType    = dto.MemoryType,
-                    Clock         = dto.Clock,
+                    MemorySize = dto.MemorySize,
+                    MemoryType = dto.MemoryType,
+                    Clock = dto.Clock,
                     UnifiedShader = dto.UnifiedShader,
-                    Tmu           = dto.Tmu,
-                    Rop           = dto.Rop,
-                    Bus           = dto.Bus,
-                    Igpu          = dto.Igpu,
-                    ProductSkuId  = sku.ProductSkuId
+                    Tmu = dto.Tmu,
+                    Rop = dto.Rop,
+                    Bus = dto.Bus,
+                    Igpu = dto.Igpu,
+                    ProductSkuId = sku.ProductSkuId
                 };
                 _context.Gpus.Add(gpu);
                 await _context.SaveChangesAsync();
@@ -83,7 +83,7 @@ namespace MVC18.Services.Implementations.Products
                 {
                     Success = true,
                     Message = "Tạo GPU thành công.",
-                    Gpu     = _mapper.Map<GpuDTO>(created)
+                    Gpu = _mapper.Map<GpuDTO>(created)
                 };
             }
             catch (Exception ex)
@@ -130,6 +130,17 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
+        public GpuResult GetUpdateAsync(GpuDTO dto)
+        {
+            var updateDTO = _mapper.Map<UpdateGpuDTO>(dto);
+            return new GpuResult
+            {
+                Success = true,
+                Message = "Lấy dữ liệu Gpu để cập nhật thành công.",
+                GpuUpdate = updateDTO
+            };
+        }
+
         public SelectList SelectGpus()
         {
             var gpus = _context.VwdGpuDetails
@@ -155,39 +166,54 @@ namespace MVC18.Services.Implementations.Products
                     .FirstOrDefaultAsync(p => p.ProductUuid == id && !p.IsDeleted);
 
                 if (product == null)
-                    return new GpuResult { Success = false, Message = "GPU không tồn tại." };
+                {
+                    return new GpuResult
+                    {
+                        Success = false,
+                        Message = "GPU không tồn tại."
+                    };
+                }
+
 
                 var sku = product.ProductSku;
                 if (sku == null)
-                    return new GpuResult { Success = false, Message = "Không tìm thấy SKU của GPU." };
+                {
+                    return new GpuResult
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy SKU của GPU."
+                    };
+                }
 
                 var gpu = sku.Gpu;
                 if (gpu == null)
-                    return new GpuResult { Success = false, Message = "Không tìm thấy dữ liệu GPU." };
+                {
+                    return new GpuResult
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy dữ liệu GPU."
+                    };
+                }
 
-                // Cập nhật Image
                 product.Image.ImageUrl = dto.ImageUrl;
 
-                // Cập nhật Product (gán tay)
                 product.ProductName = dto.ProductName;
                 product.Description = dto.Description;
-                product.CategoryId  = dto.CategoryId;
-                product.SupplierId  = dto.CompanyId;
-                product.UpdatedAt   = DateTime.Now;
+                product.CategoryId = dto.CategoryId;
+                product.SupplierId = dto.CompanyId;
+                product.UpdatedAt = DateTime.Now;
 
-                // Cập nhật ProductSku (gán tay)
-                sku.UnitPrice    = dto.UnitPrice;
+                sku.UnitPrice = dto.UnitPrice;
                 sku.UnitsInStock = dto.UnitsInStock;
 
-                // Cập nhật Gpu (gán tay)
-                gpu.MemorySize    = dto.MemorySize;
-                gpu.MemoryType    = dto.MemoryType;
-                gpu.Clock         = dto.Clock;
+                gpu.MemorySize = dto.MemorySize;
+                gpu.MemoryType = dto.MemoryType;
+                gpu.Clock = dto.Clock;
                 gpu.UnifiedShader = dto.UnifiedShader;
-                gpu.Tmu           = dto.Tmu;
-                gpu.Rop           = dto.Rop;
-                gpu.Bus           = dto.Bus;
-                gpu.Igpu          = dto.Igpu;
+                gpu.Tmu = dto.Tmu;
+                gpu.Rop = dto.Rop;
+                gpu.Bus = dto.Bus;
+                gpu.Igpu = dto.Igpu;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -199,7 +225,7 @@ namespace MVC18.Services.Implementations.Products
                 {
                     Success = true,
                     Message = "Cập nhật GPU thành công.",
-                    Gpu     = _mapper.Map<GpuDTO>(updated)
+                    Gpu = _mapper.Map<GpuDTO>(updated)
                 };
             }
             catch (Exception ex)

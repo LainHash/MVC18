@@ -61,22 +61,7 @@ namespace MVC18.Controllers
             if (!result.Success)
                 return NotFound();
 
-            var dto = new UpdateGpuDTO
-            {
-                ProductName   = result.Gpu!.ProductName,
-                ImageUrl      = result.Gpu.ImageUrl ?? string.Empty,
-                Description   = result.Gpu.Description,
-                UnitPrice     = result.Gpu.UnitPrice,
-                UnitsInStock  = result.Gpu.UnitsInStock,
-                MemorySize    = result.Gpu.MemorySize,
-                MemoryType    = result.Gpu.MemoryType,
-                Clock         = result.Gpu.Clock,
-                UnifiedShader = result.Gpu.UnifiedShader,
-                Tmu           = result.Gpu.Tmu,
-                Rop           = result.Gpu.Rop,
-                Bus           = result.Gpu.Bus,
-                Igpu          = result.Gpu.Igpu
-            };
+            var dto = _gpuService.GetUpdateAsync(result.Gpu!);
             return View(dto);
         }
 

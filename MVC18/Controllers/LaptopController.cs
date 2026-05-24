@@ -61,20 +61,7 @@ namespace MVC18.Controllers
             if (!result.Success)
                 return NotFound();
 
-            var l = result.Laptop!;
-            var dto = new UpdateLaptopDTO
-            {
-                ProductName      = l.ProductName,
-                ImageUrl         = l.ImageUrl ?? string.Empty,
-                Description      = l.Description,
-                UnitPrice        = l.UnitPrice,
-                UnitsInStock     = l.UnitsInStock,
-                LaptopType       = l.LaptopType,
-                Os               = l.Os,
-                ScreenResolution = l.ScreenResolution,
-                Length           = l.Length,
-                Weight           = l.Weight
-            };
+            var dto = _laptopService.GetUpdateAsync(result.Laptop!);
             return View(dto);
         }
 
