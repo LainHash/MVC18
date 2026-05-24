@@ -57,12 +57,11 @@ namespace MVC18.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var result = await _storageService.GetOneAsync(id);
+            var result = await _storageService.GetUpdateAsync(id);
             if (!result.Success)
                 return NotFound();
 
-            var dto = _storageService.GetUpdateAsync(result.Storage!);
-            return View(dto);
+            return View(result.StorageUpdate);
         }
 
         [Authorize(Policy = "Manager")]

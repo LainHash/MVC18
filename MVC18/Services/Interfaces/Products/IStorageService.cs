@@ -12,7 +12,7 @@ namespace MVC18.Services.Interfaces.Products
         Task<StorageResult> GetOneAsync(Guid id);
         Task<StorageResult> CreateAsync(CreateStorageDTO dto);
 
-        StorageResult GetUpdateAsync(StorageDTO dto);
+        Task<StorageResult> GetUpdateAsync(Guid id);
         Task<StorageResult> UpdateAsync(Guid id, UpdateStorageDTO dto);
 
         SelectList SelectStorages();

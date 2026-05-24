@@ -4,9 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MVC18.Data;
 using MVC18.Services.Implementations.Auth;
+using MVC18.Services.Implementations.Commons;
 using MVC18.Services.Implementations.Products;
+using MVC18.Services.Implementations.Users.Customers;
+using MVC18.Services.Implementations.Users.Employees;
 using MVC18.Services.Interfaces.Auth;
+using MVC18.Services.Interfaces.Commons;
 using MVC18.Services.Interfaces.Products;
+using MVC18.Services.Interfaces.Users.Customers;
+using MVC18.Services.Interfaces.Users.Employees;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -86,9 +92,10 @@ builder.Services.AddScoped<IGpuService, GpuService>();
 builder.Services.AddScoped<IRamService, RamService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IEmailService, MVC18.Services.Implementations.Auth.EmailService>();
-builder.Services.AddScoped<MVC18.Services.Interfaces.Users.Customers.ICustomerService, MVC18.Services.Implementations.Users.Customers.CustomerService>();
-builder.Services.AddScoped<MVC18.Services.Interfaces.Users.Employees.IEmployeeService, MVC18.Services.Implementations.Users.Employees.EmployeeService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<ICommonService, CommonService>();
 
 
 var app = builder.Build();

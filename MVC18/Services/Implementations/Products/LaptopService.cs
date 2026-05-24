@@ -152,9 +152,19 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
-        public LaptopResult GetUpdateAsync(LaptopDTO dto)
+        public async Task<LaptopResult> GetUpdateAsync(Guid id)
         {
-            var updateDTO = _mapper.Map<UpdateLaptopDTO>(dto);
+            var laptop = await _context.VwdLaptopDetails
+                .FirstOrDefaultAsync(l => l.ProductUuid == id);
+            if (laptop == null)
+            {
+                return new LaptopResult
+                {
+                    Success = false,
+                    Message = "Laptop không tồn tại."
+                };
+            }
+            var updateDTO = _mapper.Map<UpdateLaptopDTO>(laptop);
             return new LaptopResult
             {
                 Success = true,

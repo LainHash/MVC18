@@ -12,7 +12,7 @@ namespace MVC18.Services.Interfaces.Products
         Task<GpuResult> GetOneAsync(Guid id);
         Task<GpuResult> CreateAsync(CreateGpuDTO dto);
 
-        GpuResult GetUpdateAsync(GpuDTO dto);
+        Task<GpuResult> GetUpdateAsync(Guid id);
         Task<GpuResult> UpdateAsync(Guid id, UpdateGpuDTO dto);
 
         SelectList SelectGpus();

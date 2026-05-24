@@ -127,9 +127,19 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
-        public CpuResult GetUpdateAsync(CpuDTO dto)
+        public async Task<CpuResult> GetUpdateAsync(Guid id)
         {
-            var updateDTO = _mapper.Map<UpdateCpuDTO>(dto);
+            var cpu = await _context.VwdCpuDetails
+                .FirstOrDefaultAsync(c => c.ProductUuid == id);
+            if (cpu == null)
+            {
+                return new CpuResult
+                {
+                    Success = false,
+                    Message = "CPU không tồn tại."
+                };
+            }
+            var updateDTO = _mapper.Map<UpdateCpuDTO>(cpu);
             return new CpuResult
             {
                 Success = true,

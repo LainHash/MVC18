@@ -57,12 +57,11 @@ namespace MVC18.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var result = await _laptopService.GetOneAsync(id);
+            var result = await _laptopService.GetUpdateAsync(id);
             if (!result.Success)
                 return NotFound();
 
-            var dto = _laptopService.GetUpdateAsync(result.Laptop!);
-            return View(dto);
+            return View(result.LaptopUpdate);
         }
 
         [Authorize(Policy = "Manager")]

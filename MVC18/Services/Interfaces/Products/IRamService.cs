@@ -12,7 +12,7 @@ namespace MVC18.Services.Interfaces.Products
         Task<RamResult> GetOneAsync(Guid id);
         Task<RamResult> CreateAsync(CreateRamDTO dto);
 
-        RamResult GetUpdateAsync(RamDTO dto);
+        Task<RamResult> GetUpdateAsync(Guid id);
         Task<RamResult> UpdateAsync(Guid id, UpdateRamDTO dto);
 
         SelectList SelectRams();

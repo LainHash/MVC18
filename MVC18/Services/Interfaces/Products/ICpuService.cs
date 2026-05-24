@@ -12,7 +12,7 @@ namespace MVC18.Services.Interfaces.Products
         Task<CpuResult> GetOneAsync(Guid id);
         Task<CpuResult> CreateAsync(CreateCpuDTO dto);
 
-        CpuResult GetUpdateAsync(CpuDTO dto);
+        Task<CpuResult> GetUpdateAsync(Guid id);
         Task<CpuResult> UpdateAsync(Guid id, UpdateCpuDTO dto);
 
         SelectList SelectCpus();

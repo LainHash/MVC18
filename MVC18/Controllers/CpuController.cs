@@ -59,10 +59,10 @@ namespace MVC18.Controllers
         {
             var result = await _cpuService.GetOneAsync(id);
             if (!result.Success)
+            {
                 return NotFound();
-
-            var dto = _cpuService.GetUpdateAsync(result.Cpu!);
-            return View(dto);
+            }
+            return View(result.CpuUpdate);
         }
 
         [Authorize(Policy = "Manager")]

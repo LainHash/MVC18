@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC18.DTOs.Misc;
 using MVC18.Helpers.Constants.Misc;
+using MVC18.Services.Interfaces.Commons;
 using MVC18.Services.Interfaces.Products;
 using System.Diagnostics;
 
@@ -10,14 +11,20 @@ namespace MVC18.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ICommonService _commonService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ICommonService commonService)
         {
             _productService = productService;
+            _commonService = commonService;
         }
 
         public async Task<IActionResult> Index([FromQuery] ProductQuery query)
         {
+            ViewBag.Categories = _commonService.GetAllCategories().Categories;
+            ViewBag.Suppliers = _commonService.GetAllSuppliers(query.CategoryName).Suppliers;
+            ViewBag.SortBys = _commonService.GetAllSortByOptions();
+
             var result = await _productService.GetAllAsync(query);
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")

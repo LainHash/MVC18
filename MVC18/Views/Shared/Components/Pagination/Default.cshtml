@@ -1,0 +1,52 @@
+﻿@model MVC18.ViewModels.PaginateVM
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        @if (Model.Page > 1)
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   aria-label="Previous"
+                   asp-route-Page="@(Model.Page > 1 ? Model.Page - 1 : 1)"
+                   asp-route-CategoryName=@Model.CategoryName
+                   asp-route-CompanyName=@Model.CompanyName
+                   asp-route-SortBy=@Model.SortBy>
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        }
+        @for ( int i = 1; i <= Model.Total; i++)
+        {
+            if (i == Model.Page)
+            {
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">@Model.Page</span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-route-Page="@i"
+                       asp-route-CategoryName=@Model.CategoryName
+                       asp-route-CompanyName=@Model.CompanyName
+                       asp-route-SortBy=@Model.SortBy>
+                        @i
+                    </a>
+                </li>
+            }
+        }
+        @if (Model.Page < Model.Total)
+        {
+            <li class="page-item">
+                <a class="page-link"
+                   aria-label="Next"
+                   asp-route-Page="@(Model.Page < Model.Total ? Model.Page + 1 : Model.Total)"
+                   asp-route-CategoryName=@Model.CategoryName
+                   asp-route-CompanyName=@Model.CompanyName
+                   asp-route-SortBy=@Model.SortBy>
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

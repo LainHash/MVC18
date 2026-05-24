@@ -130,9 +130,19 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
-        public GpuResult GetUpdateAsync(GpuDTO dto)
+        public async Task<GpuResult> GetUpdateAsync(Guid id)
         {
-            var updateDTO = _mapper.Map<UpdateGpuDTO>(dto);
+            var gpu = await _context.VwdGpuDetails
+                .FirstOrDefaultAsync(g => g.ProductUuid == id);
+            if (gpu == null)
+            {
+                return new GpuResult
+                {
+                    Success = false,
+                    Message = "GPU không tồn tại."
+                };
+            }
+            var updateDTO = _mapper.Map<UpdateGpuDTO>(gpu);
             return new GpuResult
             {
                 Success = true,

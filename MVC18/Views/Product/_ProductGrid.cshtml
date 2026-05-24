@@ -1,5 +1,7 @@
 @model MVC18.ResultModels.Misc.PagedResult<MVC18.DTOs.Products.ProductDTO>
-
+@{
+    var query = Context.Request.Query;
+}
 <!-- Product Grid -->
 <div class="products-grid">
     @if (Model.Items != null && Model.Items.Any())

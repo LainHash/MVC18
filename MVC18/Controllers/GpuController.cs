@@ -57,12 +57,11 @@ namespace MVC18.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var result = await _gpuService.GetOneAsync(id);
+            var result = await _gpuService.GetUpdateAsync(id);
             if (!result.Success)
                 return NotFound();
 
-            var dto = _gpuService.GetUpdateAsync(result.Gpu!);
-            return View(dto);
+            return View(result.GpuUpdate);
         }
 
         [Authorize(Policy = "Manager")]

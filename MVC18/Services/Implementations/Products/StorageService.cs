@@ -127,13 +127,23 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
-        public StorageResult GetUpdateAsync(StorageDTO dto)
+        public async Task<StorageResult> GetUpdateAsync(Guid id)
         {
-            var updateDTO = _mapper.Map<UpdateStorageDTO>(dto);
+            var storage = await _context.VwdStorageDetails
+                .FirstOrDefaultAsync(s => s.ProductUuid == id);
+            if (storage == null)
+            {
+                return new StorageResult
+                {
+                    Success = false,
+                    Message = "Bộ nhớ không tồn tại."
+                };
+            }
+            var updateDTO = _mapper.Map<UpdateStorageDTO>(storage);
             return new StorageResult
             {
                 Success = true,
-                Message = "Lấy dữ liệu cập nhật Storage thành công.",
+                Message = "Lấy dữ liệu cập nhật Bộ nhớ thành công.",
                 StorageUpdate = updateDTO
             };
         }

@@ -126,9 +126,19 @@ namespace MVC18.Services.Implementations.Products
             };
         }
 
-        public RamResult GetUpdateAsync(RamDTO dto)
+        public async Task<RamResult> GetUpdateAsync(Guid id)
         {
-            var updateDTO = _mapper.Map<UpdateRamDTO>(dto);
+            var ram = await _context.VwdRamDetails
+                .FirstOrDefaultAsync(r => r.ProductUuid == id);
+            if (ram == null)
+            {
+                return new RamResult
+                {
+                    Success = false,
+                    Message = "Ram không tồn tại."
+                };
+            }
+            var updateDTO = _mapper.Map<UpdateRamDTO>(ram);
             return new RamResult
             {
                 Success = true,

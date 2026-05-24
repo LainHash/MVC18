@@ -12,7 +12,7 @@ namespace MVC18.Services.Interfaces.Products
         Task<LaptopResult> GetOneAsync(Guid id);
         Task<LaptopResult> CreateAsync(CreateLaptopDTO dto);
 
-        LaptopResult GetUpdateAsync(LaptopDTO dto);
+        Task<LaptopResult> GetUpdateAsync(Guid id);
         Task<LaptopResult> UpdateAsync(Guid id, UpdateLaptopDTO dto);
 
         SelectList SelectLaptops();
