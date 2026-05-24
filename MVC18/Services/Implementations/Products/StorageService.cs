@@ -38,35 +38,35 @@ namespace MVC18.Services.Implementations.Products
                 {
                     ProductName = dto.ProductName,
                     Description = dto.Description,
-                    CategoryId  = dto.CategoryId,
-                    SupplierId  = dto.CompanyId,
-                    ImageId     = image.ImageId,
-                    IsDeleted   = false,
-                    CreatedAt   = DateTime.Now,
-                    UpdatedAt   = DateTime.Now
+                    CategoryId = dto.CategoryId,
+                    SupplierId = dto.CompanyId,
+                    ImageId = image.ImageId,
+                    IsDeleted = false,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
                 };
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
 
                 var sku = new ProductSku
                 {
-                    ProductId    = product.ProductId,
-                    UnitPrice    = dto.UnitPrice,
+                    ProductId = product.ProductId,
+                    UnitPrice = dto.UnitPrice,
                     UnitsInStock = dto.UnitsInStock,
                     Discontinued = false,
-                    IsDeleted    = false
+                    IsDeleted = false
                 };
                 _context.ProductSkus.Add(sku);
                 await _context.SaveChangesAsync();
 
                 var storage = new Storage
                 {
-                    Capacity      = dto.Capacity,
-                    MemoryType    = dto.MemoryType,
+                    Capacity = dto.Capacity,
+                    MemoryType = dto.MemoryType,
                     InterfaceType = dto.InterfaceType,
-                    ReadSpeed     = dto.ReadSpeed,
-                    WriteSpeed    = dto.WriteSpeed,
-                    ProductSkuId  = sku.ProductSkuId
+                    ReadSpeed = dto.ReadSpeed,
+                    WriteSpeed = dto.WriteSpeed,
+                    ProductSkuId = sku.ProductSkuId
                 };
                 _context.Storages.Add(storage);
                 await _context.SaveChangesAsync();
@@ -163,32 +163,50 @@ namespace MVC18.Services.Implementations.Products
                     .FirstOrDefaultAsync(p => p.ProductUuid == id && !p.IsDeleted);
 
                 if (product == null)
-                    return new StorageResult { Success = false, Message = "Storage không tồn tại." };
+                {
+                    return new StorageResult
+                    {
+                        Success = false,
+                        Message = "Storage không tồn tại."
+                    };
+                }
 
                 var sku = product.ProductSku;
                 if (sku == null)
-                    return new StorageResult { Success = false, Message = "Không tìm thấy SKU của Storage." };
+                {
+                    return new StorageResult
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy SKU của Storage."
+                    };
+                }
 
                 var storage = sku.Storage;
                 if (storage == null)
-                    return new StorageResult { Success = false, Message = "Không tìm thấy dữ liệu Storage." };
+                {
+                    return new StorageResult
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy dữ liệu Storage."
+                    };
+                }
 
                 product.Image.ImageUrl = dto.ImageUrl;
 
                 product.ProductName = dto.ProductName;
                 product.Description = dto.Description;
-                product.CategoryId  = dto.CategoryId;
-                product.SupplierId  = dto.CompanyId;
-                product.UpdatedAt   = DateTime.Now;
+                product.CategoryId = dto.CategoryId;
+                product.SupplierId = dto.CompanyId;
+                product.UpdatedAt = DateTime.Now;
 
-                sku.UnitPrice    = dto.UnitPrice;
+                sku.UnitPrice = dto.UnitPrice;
                 sku.UnitsInStock = dto.UnitsInStock;
 
-                storage.Capacity      = dto.Capacity;
-                storage.MemoryType    = dto.MemoryType;
+                storage.Capacity = dto.Capacity;
+                storage.MemoryType = dto.MemoryType;
                 storage.InterfaceType = dto.InterfaceType;
-                storage.ReadSpeed     = dto.ReadSpeed;
-                storage.WriteSpeed    = dto.WriteSpeed;
+                storage.ReadSpeed = dto.ReadSpeed;
+                storage.WriteSpeed = dto.WriteSpeed;
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
