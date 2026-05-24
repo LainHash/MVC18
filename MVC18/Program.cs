@@ -8,11 +8,13 @@ using MVC18.Services.Implementations.Commons;
 using MVC18.Services.Implementations.Products;
 using MVC18.Services.Implementations.Users.Customers;
 using MVC18.Services.Implementations.Users.Employees;
+using MVC18.Services.Implementations.Users.Managers;
 using MVC18.Services.Interfaces.Auth;
 using MVC18.Services.Interfaces.Commons;
 using MVC18.Services.Interfaces.Products;
 using MVC18.Services.Interfaces.Users.Customers;
 using MVC18.Services.Interfaces.Users.Employees;
+using MVC18.Services.Interfaces.Users.Managers;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -96,6 +98,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<ICommonService, CommonService>();
+builder.Services.AddScoped<IManagerService, ManagerService>();
 
 
 var app = builder.Build();

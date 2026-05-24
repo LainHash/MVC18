@@ -1,0 +1,189 @@
+@model IEnumerable<MVC18.DTOs.Products.ProductDTO>
+@{
+    ViewData["Title"] = "Quản lý Sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid py-5">
+    <div class="container" style="max-width: 1200px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0">Quản lý Sản phẩm</h2>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                <i class="fas fa-plus me-2"></i>Thêm Sản phẩm
+            </button>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover align-middle mb-0" id="productsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 80px;" class="text-center">Hình ảnh</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Danh mục</th>
+                                <th>Hãng SX</th>
+                                <th class="text-end">Giá bán</th>
+                                <th class="text-end">Tồn kho</th>
+                                <th class="text-center">Trạng thái</th>
+                                <th style="width: 120px;" class="text-center">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr id="row-@item.ProductUuid">
+                                        <td class="text-center">
+                                            <img src="@item.ImageUrl" alt="@item.ProductName" class="img-fluid rounded" style="max-height: 40px; object-fit: contain;" onerror="this.src='https://via.placeholder.com/40';" />
+                                        </td>
+                                        <td class="fw-semibold">@item.ProductName</td>
+                                        <td>@item.CategoryName</td>
+                                        <td>@item.CompanyName</td>
+                                        <td class="text-end">@item.UnitPrice.ToString("N0") đ</td>
+                                        <td class="text-end">@item.UnitsInStock</td>
+                                        <td class="text-center">
+                                            @if(item.IsDeleted)
+                                            {
+                                                <span class="badge bg-danger">Đã xóa</span>
+                                            }
+                                            else if(item.Discontinued)
+                                            {
+                                                <span class="badge bg-warning text-dark">Ngừng KD</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-success">Đang bán</span>
+                                            }
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="@Url.Action("Edit", "Product", new { category = item.CategoryName, id = item.ProductUuid })" class="btn btn-sm btn-outline-primary" title="Sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger ms-1" title="Xóa" onclick="confirmDelete('@item.ProductUuid', '@item.ProductName')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center py-4 text-muted">Không có dữ liệu sản phẩm</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Chọn Danh mục Thêm Sản phẩm -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">Chọn Loại Sản Phẩm Mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addCategoryForm">
+                    <div class="mb-3">
+                        <label for="categorySelect" class="form-label">Loại sản phẩm (Danh mục):</label>
+                        <select class="form-select form-select-lg" id="categorySelect" required>
+                            <option value="Laptop">Laptop</option>
+                            <option value="Cpu">CPU</option>
+                            <option value="Gpu">GPU</option>
+                            <option value="Ram">RAM</option>
+                            <option value="Storage">Lưu trữ (Storage)</option>
+                        </select>
+                        <div class="form-text text-muted mt-2">
+                            Mỗi loại sản phẩm có các thông số kỹ thuật đặc thù khác nhau. Bạn sẽ được chuyển hướng tới form tương ứng.
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary px-4" onclick="continueAddProduct()">Tiếp tục <i class="fas fa-arrow-right ms-1"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Include DataTables for table enhancement -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            if ($('#productsTable tbody tr').length > 1 || !$('#productsTable tbody tr td').hasClass('dataTables_empty')) {
+                $('#productsTable').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json'
+                    },
+                    ordering: true,
+                    pageLength: 10,
+                    lengthMenu: [10, 25, 50, 100]
+                });
+            }
+        });
+
+        function continueAddProduct() {
+            var category = $('#categorySelect').val();
+            if(category) {
+                // Đóng modal trước khi redirect
+                var myModalEl = document.getElementById('addCategoryModal');
+                var modal = bootstrap.Modal.getInstance(myModalEl);
+                modal.hide();
+                
+                // Redirect to Product/Create which redirects to specific controller
+                window.location.href = '@Url.Action("Create", "Product")' + '?category=' + category;
+            }
+        }
+
+        function confirmDelete(id, name) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                html: "Bạn có chắc chắn muốn xóa sản phẩm <b>" + name + "</b>?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Có, Xóa!',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("Delete", "Product")/' + id,
+                        type: 'POST',
+                        success: function(res) {
+                            if(res.success) {
+                                Swal.fire(
+                                    'Đã xóa!',
+                                    res.message || 'Sản phẩm đã được xóa thành công.',
+                                    'success'
+                                );
+                                // Remove row from DataTable
+                                var table = $('#productsTable').DataTable();
+                                table.row($('#row-' + id)).remove().draw();
+                            } else {
+                                Swal.fire('Lỗi', res.message || 'Xóa thất bại', 'error');
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Lỗi', 'Đã xảy ra lỗi hệ thống', 'error');
+                        }
+                    });
+                }
+            })
+        }
+    </script>
+}

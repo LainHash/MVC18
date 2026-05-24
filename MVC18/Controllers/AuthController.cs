@@ -20,7 +20,7 @@ namespace MVC18.Controllers
             {
                 case "Customer":
                     return RedirectToAction("Details", "Customer");
-                case "Employee":
+                case "Manager":
                     return RedirectToAction("Details", "Employee");
                 default:
                     return NotFound();

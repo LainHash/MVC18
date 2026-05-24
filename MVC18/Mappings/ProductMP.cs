@@ -16,11 +16,11 @@ namespace MVC18.Mappings
             CreateMap<StorageDTO, VwdStorageDetail>().ReverseMap();
             CreateMap<RamDTO, VwdRamDetail>().ReverseMap();
 
-            CreateMap<CpuDTO, UpdateCpuDTO>();
-            CreateMap<GpuDTO, UpdateGpuDTO>();
-            CreateMap<LaptopDTO, UpdateLaptopDTO>();
-            CreateMap<StorageDTO, UpdateStorageDTO>();
-            CreateMap<RamDTO, UpdateRamDTO>();
+            CreateMap<VwdCpuDetail, UpdateCpuDTO>();
+            CreateMap<VwdGpuDetail, UpdateGpuDTO>();
+            CreateMap<VwdLaptopDetail, UpdateLaptopDTO>();
+            CreateMap<VwdStorageDetail, UpdateStorageDTO>();
+            CreateMap<VwdRamDetail, UpdateRamDTO>();
         }
     }
 }
