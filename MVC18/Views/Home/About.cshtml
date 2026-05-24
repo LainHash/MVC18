@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Về Chúng Tôi";
+}
+
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb mb-5">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h4 class="text-white display-4 mb-4 wow fadeInDown" data-wow-delay="0.1s">Về Chúng Tôi</h4>
+        <ol class="breadcrumb d-flex justify-content-center mb-0 wow fadeInDown" data-wow-delay="0.3s">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active text-primary">Giới thiệu</li>
+        </ol>    
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- About Start -->
+<div class="container-fluid overflow-hidden about py-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
+                <div class="about-item">
+                    <div class="pb-5">
+                        <h1 class="display-5 text-capitalize">Về <span class="text-primary">TechStore</span></h1>
+                        <p class="mb-0">Chúng tôi là nhà cung cấp hàng đầu về laptop và linh kiện PC chất lượng cao. Dù bạn là game thủ, nhà sáng tạo hay dân chuyên nghiệp, chúng tôi đều có phần cứng phù hợp cho bạn.
+                        </p>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="about-item-inner border p-4">
+                                <div class="about-icon mb-4">
+                                    <i class="fas fa-microchip fa-3x text-primary"></i>
+                                </div>
+                                <h5 class="mb-3">Chất lượng cao cấp</h5>
+                                <p class="mb-0">Chúng tôi chỉ cung cấp những sản phẩm tốt nhất từ các thương hiệu hàng đầu.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="about-item-inner border p-4">
+                                <div class="about-icon mb-4">
+                                    <i class="fas fa-headset fa-3x text-primary"></i>
+                                </div>
+                                <h5 class="mb-3">Hỗ trợ chuyên nghiệp</h5>
+                                <p class="mb-0">Đội ngũ của chúng tôi luôn sẵn sàng hỗ trợ bạn xây dựng cấu hình hoàn hảo nhất.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-item my-4">Niềm đam mê công nghệ thúc đẩy chúng tôi mang đến trải nghiệm khách hàng tốt nhất có thể. Hãy để chúng tôi chắp cánh cho cuộc phiêu lưu kỹ thuật số tiếp theo của bạn.
+                    </p>
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="text-center rounded bg-secondary p-4">
+                                <h1 class="display-6 text-white">10</h1>
+                                <h5 class="text-light mb-0">Năm kinh nghiệm</h5>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="rounded">
+                                <p class="mb-2"><i class="fa fa-check-circle text-primary me-1"></i> Đại lý ủy quyền</p>
+                                <p class="mb-2"><i class="fa fa-check-circle text-primary me-1"></i> Giao hàng nhanh chóng</p>
+                                <p class="mb-2"><i class="fa fa-check-circle text-primary me-1"></i> Thanh toán an toàn</p>
+                                <p class="mb-0"><i class="fa fa-check-circle text-primary me-1"></i> Hỗ trợ 24/7</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 d-flex align-items-center">
+                            <a asp-controller="Home" asp-action="Contact" class="btn btn-primary rounded py-3 px-5">Liên Hệ Ngay</a>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="d-flex align-items-center">
+                                <img src="~/img/attachment-img.jpg" class="img-fluid rounded-circle border border-4 border-secondary" style="width: 100px; height: 100px;" alt="Image">
+                                <div class="ms-4">
+                                    <h4>Chuyên Gia Công Nghệ</h4>
+                                    <p class="mb-0">Người Sáng Lập TechStore</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.2s">
+                <div class="about-img">
+                    <div class="img-1">
+                        <img src="~/img/about-img.jpg" class="img-fluid rounded h-100 w-100" alt="">
+                    </div>
+                    <div class="img-2">
+                        <img src="~/img/about-img-1.jpg" class="img-fluid rounded w-100" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End -->

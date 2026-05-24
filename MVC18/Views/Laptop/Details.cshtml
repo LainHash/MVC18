@@ -1,1 +1,57 @@
-﻿@model MVC18.DTOs.Products.LaptopDTO
+@model MVC18.DTOs.Products.LaptopDTO
+
+@{
+    ViewData["Title"] = Model.ProductName;
+}
+
+<!-- Header Start -->
+<div class="container-fluid bg-breadcrumb mb-5">
+    <div class="container text-center py-5" style="max-width: 900px;">
+        <h4 class="text-white display-4 mb-4 wow fadeInDown" data-wow-delay="0.1s">@Model.ProductName</h4>
+        <ol class="breadcrumb d-flex justify-content-center mb-0 wow fadeInDown" data-wow-delay="0.3s">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Product" asp-action="Index" asp-route-CategoryName="@Model.CategoryName">@Model.CategoryName</a></li>
+            <li class="breadcrumb-item active text-primary">Chi tiết</li>
+        </ol>    
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Product Details Start -->
+<div class="container-fluid about py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
+                <div class="about-img pb-5 pb-xl-0">
+                    <img src="@(!string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : Url.Content("~/img/about-img-1.jpg"))" class="img-fluid rounded w-100" style="object-fit: cover;" alt="@Model.ProductName">
+                </div>
+            </div>
+            <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.2s">
+                <div class="about-item">
+                    <h4 class="text-primary text-uppercase fw-bold mb-3">Chi tiết Sản phẩm</h4>
+                    <h1 class="display-5 mb-4">@Model.ProductName</h1>
+                    <p class="mb-4">@Model.Description</p>
+                    <div class="row g-4 mb-4">
+                        <div class="col-sm-6">
+                            <h6 class="mb-3"><i class="fas fa-microchip text-primary me-2"></i>CPU: @Model.CpuName</h6>
+                            <h6 class="mb-3"><i class="fas fa-memory text-primary me-2"></i>RAM: @Model.RamName</h6>
+                            <h6 class="mb-3"><i class="fas fa-hdd text-primary me-2"></i>Lưu trữ: @Model.StorageName</h6>
+                        </div>
+                        <div class="col-sm-6">
+                            <h6 class="mb-3"><i class="fas fa-tv text-primary me-2"></i>GPU: @Model.GpuName</h6>
+                            <h6 class="mb-3"><i class="fas fa-laptop text-primary me-2"></i>Màn hình: @Model.ScreenResolution</h6>
+                            <h6 class="mb-3"><i class="fas fa-weight text-primary me-2"></i>Trọng lượng: @Model.Weight kg</h6>
+                        </div>
+                    </div>
+                    <div class="bg-light p-4 rounded mb-4">
+                        <h4 class="mb-3">Giá: $@Model.UnitPrice</h4>
+                        <p class="mb-0"><strong>Còn hàng:</strong> @Model.UnitsInStock</p>
+                        <p class="mb-0"><strong>Thương hiệu:</strong> @Model.CompanyName</p>
+                    </div>
+                    <a href="mailto:sales@techstore.com" class="btn btn-primary rounded-pill py-3 px-5">Liên hệ mua hàng</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Product Details End -->
