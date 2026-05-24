@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!-- Header Start -->
@@ -16,51 +17,5 @@
 </div>
 <!-- Header End -->
 
-<!-- Product categories Start -->
-<div class="container-fluid categories py-5">
-    <div class="container">
-        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
-            <h1 class="display-5 text-capitalize mb-3">Sản Phẩm <span class="text-primary">của chúng tôi</span></h1>
-            <p class="mb-0">Khám phá lựa chọn các sản phẩm công nghệ chất lượng hàng đầu. Dù bạn đang tìm kiếm một chiếc laptop dựng sẵn hay tự ráp PC cho riêng mình, chúng tôi đều có những gì bạn cần.</p>
-        </div>
-        <div class="row g-4">
-            @if (Model != null && Model.Any())
-            {
-                @foreach(var item in Model)
-                {
-                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="categories-item p-4">
-                            <div class="categories-item-inner">
-                                <div class="categories-img rounded-top">
-                                    <img src="@(!string.IsNullOrEmpty(item.ImageUrl) ? item.ImageUrl : Url.Content("~/img/car-1.png"))" class="img-fluid w-100 rounded-top" alt="@item.ProductName" style="height: 250px; object-fit: cover;">
-                                </div>
-                                <div class="categories-content rounded-bottom p-4">
-                                    <h4 class="text-truncate">@item.ProductName</h4>
-                                    <div class="categories-review mb-4">
-                                        <div class="me-3">@item.CategoryName</div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <h4 class="bg-white text-primary rounded-pill py-2 px-4 mb-0">Liên hệ để biết giá</h4>
-                                    </div>
-                                    <div class="row gy-2 gx-0 text-center mb-4">
-                                        <div class="col-12 text-start">
-                                            <p class="text-truncate" style="max-height: 50px;">@item.Description</p>
-                                        </div>
-                                    </div>
-                                    <a asp-controller="Product" asp-action="Details" asp-route-category="@item.CategoryName" asp-route-id="@item.ProductUuid" class="btn btn-primary rounded-pill d-flex justify-content-center py-3">Xem chi tiết</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12 text-center">
-                    <p>Không tìm thấy sản phẩm nào phù hợp với tiêu chí của bạn.</p>
-                </div>
-            }
-        </div>
-    </div>
-</div>
-<!-- Product categories End -->
+
+@await Html.PartialAsync("_ProductGrid", Model)
