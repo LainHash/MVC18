@@ -2,6 +2,7 @@
 using MVC18.DTOs.Misc;
 using MVC18.Helpers.Constants.Misc;
 using MVC18.Services.Interfaces.Products;
+using System.Diagnostics;
 
 namespace MVC18.Controllers
 {
@@ -20,15 +21,28 @@ namespace MVC18.Controllers
             return View(result.Items);
         }
 
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Create(string category)
         {
-            var result = await _productService.GetOneAsync(id);
-            if (!result.Success)
+            switch (category)
             {
-                return NotFound(result.Message);
+                case CategoryConstants.Laptop:
+                    return RedirectToAction("Create", "Laptop");
+                case CategoryConstants.Cpu:
+                    return RedirectToAction("Create", "Cpu");
+                case CategoryConstants.Gpu:
+                    return RedirectToAction("Create", "Gpu");
+                case CategoryConstants.Ram:
+                    return RedirectToAction("Create", "Ram");
+                case CategoryConstants.Storage:
+                    return RedirectToAction("Create", "Storage");
             }
+            return NotFound();
+        }
 
-            switch (result.Product!.CategoryName)
+        public async Task<IActionResult> Details(string category, Guid id)
+        {
+
+            switch (category)
             {
                 case CategoryConstants.Laptop:
                     return RedirectToAction("Details", "Laptop", new { id });
@@ -42,11 +56,25 @@ namespace MVC18.Controllers
                     return RedirectToAction("Details", "Storage", new { id });
             }
 
-            return NotFound(new
+            return NotFound();
+        }
+
+        public async Task<IActionResult> Edit(string category, Guid id)
+        {
+            switch (category)
             {
-                success = false,
-                message = "Sản phẩm không tồn tại."
-            });
+                case CategoryConstants.Laptop:
+                    return RedirectToAction("Edit", "Laptop", new { id });
+                case CategoryConstants.Cpu:
+                    return RedirectToAction("Edit", "Cpu", new { id });
+                case CategoryConstants.Gpu:
+                    return RedirectToAction("Edit", "Gpu", new { id });
+                case CategoryConstants.Ram:
+                    return RedirectToAction("Edit", "Ram", new { id });
+                case CategoryConstants.Storage:
+                    return RedirectToAction("Edit", "Storage", new { id });
+            }
+            return NotFound();
         }
 
         public async Task<IActionResult> Delete(Guid id)

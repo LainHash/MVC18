@@ -6,5 +6,6 @@ namespace MVC18.ResultModels.Products
     public class RamResult : BaseResult
     {
         public RamDTO? Ram { get; set; }
+        public List<RamDTO>? Rams { get; set; }
     }
 }

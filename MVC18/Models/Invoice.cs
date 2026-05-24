@@ -23,11 +23,7 @@ public partial class Invoice
 
     public decimal Subtotal { get; set; }
 
-    public double? ProductDiscount { get; set; }
-
     public decimal ShippingFee { get; set; }
-
-    public double? ShippingDiscount { get; set; }
 
     public decimal TotalAmount { get; set; }
 
@@ -37,9 +33,17 @@ public partial class Invoice
 
     public DateTime UpdatedAt { get; set; }
 
+    public int? ProductDiscountId { get; set; }
+
+    public int? ShippingDiscountId { get; set; }
+
     public virtual Customer Customer { get; set; } = null!;
 
     public virtual Employee? Employee { get; set; }
 
     public virtual ICollection<InvoiceDetail> InvoiceDetails { get; set; } = new List<InvoiceDetail>();
+
+    public virtual Discount? ProductDiscount { get; set; }
+
+    public virtual Discount? ShippingDiscount { get; set; }
 }

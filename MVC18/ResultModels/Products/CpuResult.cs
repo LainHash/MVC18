@@ -6,5 +6,6 @@ namespace MVC18.ResultModels.Products
     public class CpuResult : BaseResult
     {
         public CpuDTO? Cpu { get; set; }
+        public List<CpuDTO>? Cpus { get; set; }
     }
 }

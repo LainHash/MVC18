@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
@@ -96,6 +97,18 @@ namespace MVC18.Services.Implementations.Products
             }
         }
 
+        public async Task<GpuResult> GetAllAsync()
+        {
+            var gpus = await _context.VwdGpuDetails
+                .ToListAsync();
+            return new GpuResult
+            {
+                Success = true,
+                Message = "Lấy danh sách GPU thành công.",
+                Gpus = _mapper.Map<List<GpuDTO>>(gpus)
+            };
+        }
+
         public async Task<GpuResult> GetOneAsync(Guid id)
         {
             var gpu = await _context.VwdGpuDetails
@@ -116,6 +129,20 @@ namespace MVC18.Services.Implementations.Products
                 Gpu = _mapper.Map<GpuDTO>(gpu)
             };
         }
+
+        public SelectList SelectGpus()
+        {
+            var gpus = _context.VwdGpuDetails
+                .Select(g => new
+                {
+                    g.GpuId,
+                    g.ProductName
+                })
+                .ToList();
+            var selectList = new SelectList(gpus, "GpuId", "ProductName");
+            return selectList;
+        }
+
         public async Task<GpuResult> UpdateAsync(Guid id, UpdateGpuDTO dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
@@ -118,6 +119,18 @@ namespace MVC18.Services.Implementations.Products
             }
         }
 
+        public async Task<LaptopResult> GetAllAsync()
+        {
+            var laptops = await _context.VwdLaptopDetails
+                .ToListAsync();
+            return new LaptopResult
+            {
+                Success = true,
+                Message = "Lấy danh sách Laptop thành công.",
+                Laptops = _mapper.Map<List<LaptopDTO>>(laptops)
+            };
+        }
+
         public async Task<LaptopResult> GetOneAsync(Guid id)
         {
             var laptop = await _context.VwdLaptopDetails
@@ -138,6 +151,20 @@ namespace MVC18.Services.Implementations.Products
                 Laptop = _mapper.Map<LaptopDTO>(laptop)
             };
         }
+
+        public SelectList SelectLaptops()
+        {
+            var laptops = _context.VwdLaptopDetails
+                .Select(l => new
+                {
+                    l.LaptopId,
+                    l.ProductName
+                })
+                .ToList();
+            var selectList = new SelectList(laptops, "LaptopId", "ProductName");
+            return selectList;
+        }
+
         public async Task<LaptopResult> UpdateAsync(Guid id, UpdateLaptopDTO dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();

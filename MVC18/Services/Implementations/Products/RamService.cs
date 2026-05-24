@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
@@ -92,6 +93,18 @@ namespace MVC18.Services.Implementations.Products
             }
         }
 
+        public async Task<RamResult> GetAllAsync()
+        {
+            var rams = await _context.VwdRamDetails
+                .ToListAsync();
+            return new RamResult
+            {
+                Success = true,
+                Message = "Lấy danh sách RAM thành công.",
+                Rams = _mapper.Map<List<RamDTO>>(rams)
+            };
+        }
+
         public async Task<RamResult> GetOneAsync(Guid id)
         {
             var ram = await _context.VwdRamDetails
@@ -112,6 +125,20 @@ namespace MVC18.Services.Implementations.Products
                 Ram = _mapper.Map<RamDTO>(ram)
             };
         }
+
+        public SelectList SelectRams()
+        {
+            var rams = _context.VwdRamDetails
+                .Select(r => new
+                {
+                    r.RamId,
+                    r.ProductName
+                })
+                .ToList();
+            var selectList = new SelectList(rams, "RamId", "ProductName");
+            return selectList;
+        }
+
         public async Task<RamResult> UpdateAsync(Guid id, UpdateRamDTO dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();

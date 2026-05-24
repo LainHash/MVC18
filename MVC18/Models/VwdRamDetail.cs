@@ -38,4 +38,6 @@ public partial class VwdRamDetail
     public int Speed { get; set; }
 
     public string Kit { get; set; } = null!;
+
+    public int RamId { get; set; }
 }

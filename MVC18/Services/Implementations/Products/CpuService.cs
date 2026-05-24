@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
@@ -94,6 +95,18 @@ namespace MVC18.Services.Implementations.Products
             }
         }
 
+        public async Task<CpuResult> GetAllAsync()
+        {
+            var cpus = await _context.VwdCpuDetails
+                .ToListAsync();
+            return new CpuResult
+            {
+                Success = true,
+                Message = "Lấy danh sách CPU thành công.",
+                Cpus = _mapper.Map<List<CpuDTO>>(cpus)
+            };
+        }
+
         public async Task<CpuResult> GetOneAsync(Guid id)
         {
             var cpu = await _context.VwdCpuDetails
@@ -113,6 +126,20 @@ namespace MVC18.Services.Implementations.Products
                 Cpu = _mapper.Map<CpuDTO>(cpu)
             };
         }
+
+        public SelectList SelectCpus()
+        {
+            var cpus = _context.VwdCpuDetails
+                .Select(c => new
+                {
+                    c.CpuId,
+                    c.ProductName
+                })
+                .ToList();
+            var selectList = new SelectList(cpus, "CpuId", "ProductName");
+            return selectList;
+        }
+
         public async Task<CpuResult> UpdateAsync(Guid id, UpdateCpuDTO dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();

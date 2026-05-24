@@ -347,6 +347,14 @@ public partial class LaptopWebDb06Context : DbContext
             entity.HasOne(d => d.Employee).WithMany(p => p.Invoices)
                 .HasForeignKey(d => d.EmployeeId)
                 .HasConstraintName("FK__Invoices__Employ__2D12A970");
+
+            entity.HasOne(d => d.ProductDiscount).WithMany(p => p.InvoiceProductDiscounts)
+                .HasForeignKey(d => d.ProductDiscountId)
+                .HasConstraintName("FK_Invoices_Discounts");
+
+            entity.HasOne(d => d.ShippingDiscount).WithMany(p => p.InvoiceShippingDiscounts)
+                .HasForeignKey(d => d.ShippingDiscountId)
+                .HasConstraintName("FK_Invoices_Discounts1");
         });
 
         modelBuilder.Entity<InvoiceDetail>(entity =>
@@ -944,8 +952,14 @@ public partial class LaptopWebDb06Context : DbContext
             entity.Property(e => e.CompanyName)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.CpuName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.Gen)
                 .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.GpuName)
+                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.InterfaceType)
                 .HasMaxLength(10)
@@ -966,11 +980,17 @@ public partial class LaptopWebDb06Context : DbContext
             entity.Property(e => e.ProductName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.RamName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.ScreenResolution)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Socket)
                 .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.StorageName)
+                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.StorageType)
                 .HasMaxLength(10)

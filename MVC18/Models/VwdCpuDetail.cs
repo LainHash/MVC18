@@ -42,4 +42,6 @@ public partial class VwdCpuDetail
     public int Speed { get; set; }
 
     public int Turbo { get; set; }
+
+    public int CpuId { get; set; }
 }

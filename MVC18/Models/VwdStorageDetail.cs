@@ -40,4 +40,6 @@ public partial class VwdStorageDetail
     public int ProductId { get; set; }
 
     public int ProductSkuId { get; set; }
+
+    public int StorageId { get; set; }
 }

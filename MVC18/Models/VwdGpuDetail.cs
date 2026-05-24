@@ -46,4 +46,6 @@ public partial class VwdGpuDetail
     public string Bus { get; set; } = null!;
 
     public bool? Igpu { get; set; }
+
+    public int GpuId { get; set; }
 }

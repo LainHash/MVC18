@@ -76,6 +76,12 @@
 
         public int UnitsInStock { get; set; }
 
-        public bool Discontinued { get; set; }
+        public string StorageName { get; set; } = null!;
+
+        public string CpuName { get; set; } = null!;
+
+        public string GpuName { get; set; } = null!;
+
+        public string RamName { get; set; } = null!;
     }
 }

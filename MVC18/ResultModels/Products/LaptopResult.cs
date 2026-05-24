@@ -6,5 +6,6 @@ namespace MVC18.ResultModels.Products
     public class LaptopResult : BaseResult
     {
         public LaptopDTO? Laptop { get; set; }
+        public List<LaptopDTO>? Laptops { get; set; }
     }
 }

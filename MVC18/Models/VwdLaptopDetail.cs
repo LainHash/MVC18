@@ -84,4 +84,14 @@ public partial class VwdLaptopDetail
     public int ProductId { get; set; }
 
     public int ProductSkuId { get; set; }
+
+    public string StorageName { get; set; } = null!;
+
+    public string CpuName { get; set; } = null!;
+
+    public string GpuName { get; set; } = null!;
+
+    public string RamName { get; set; } = null!;
+
+    public int LaptopId { get; set; }
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC18.Data;
 using MVC18.DTOs.Products;
@@ -93,6 +94,18 @@ namespace MVC18.Services.Implementations.Products
             }
         }
 
+        public async Task<StorageResult> GetAllAsync()
+        {
+            var storages = await _context.VwdStorageDetails
+                .ToListAsync();
+            return new StorageResult
+            {
+                Success = true,
+                Message = "Lấy danh sách Bộ nhớ thành công.",
+                Storages = _mapper.Map<List<StorageDTO>>(storages)
+            };
+        }
+
         public async Task<StorageResult> GetOneAsync(Guid id)
         {
             var storage = await _context.VwdStorageDetails
@@ -113,6 +126,20 @@ namespace MVC18.Services.Implementations.Products
                 Storage = _mapper.Map<StorageDTO>(storage)
             };
         }
+
+        public SelectList SelectStorages()
+        {
+            var storages = _context.VwdStorageDetails
+                .Select(s => new
+                {
+                    s.StorageId,
+                    s.ProductName
+                })
+                .ToList();
+            var selectList = new SelectList(storages, "StorageId", "ProductName");
+            return selectList;
+        }
+
         public async Task<StorageResult> UpdateAsync(Guid id, UpdateStorageDTO dto)
         {
             using var transaction = await _context.Database.BeginTransactionAsync();
@@ -135,21 +162,17 @@ namespace MVC18.Services.Implementations.Products
                 if (storage == null)
                     return new StorageResult { Success = false, Message = "Không tìm thấy dữ liệu Storage." };
 
-                // Cập nhật Image
                 product.Image.ImageUrl = dto.ImageUrl;
 
-                // Cập nhật Product (gán tay)
                 product.ProductName = dto.ProductName;
                 product.Description = dto.Description;
                 product.CategoryId  = dto.CategoryId;
                 product.SupplierId  = dto.CompanyId;
                 product.UpdatedAt   = DateTime.Now;
 
-                // Cập nhật ProductSku (gán tay)
                 sku.UnitPrice    = dto.UnitPrice;
                 sku.UnitsInStock = dto.UnitsInStock;
 
-                // Cập nhật Storage (gán tay)
                 storage.Capacity      = dto.Capacity;
                 storage.MemoryType    = dto.MemoryType;
                 storage.InterfaceType = dto.InterfaceType;

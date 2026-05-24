@@ -16,4 +16,8 @@ public partial class Discount
     public int Amount { get; set; }
 
     public string Type { get; set; } = null!;
+
+    public virtual ICollection<Invoice> InvoiceProductDiscounts { get; set; } = new List<Invoice>();
+
+    public virtual ICollection<Invoice> InvoiceShippingDiscounts { get; set; } = new List<Invoice>();
 }
